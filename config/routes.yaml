@@ -1,3 +1,18 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\HomeController::indexAction
+about:
+    path: /o-nas
+    controller: App\Controller\AboutController::indexAction
+offers:
+    path: /oferta
+    controller: App\Controller\OfferController::indexAction
+offer:
+    path: /oferta/{slug}
+    controller: App\Controller\OfferController::viewAction
+#gallery:
+#    path: /galeria
+#    controller: App\Controller\GalleryController::indexAction
+contact:
+    path: /kontakt
+    controller: App\Controller\ContactController::indexAction

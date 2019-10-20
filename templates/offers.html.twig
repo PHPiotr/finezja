@@ -1,0 +1,68 @@
+{% extends('base.html.twig') %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="content-inner">
+                    <div id="component" class="col-sm-12">
+                        <main>
+                            <section class="page-gallery page-gallery__works">
+                                <header class="page_header">
+                                    <h3 class="heading-style-3 visible-first">Oferta</h3>
+                                </header>
+                                <ul id="isotopeContainer" class="gallery items-row row cols-3 hover_false grid loaded">
+                                    {% for item in items %}
+                                        <li class="gallery-item mix mix_all gallery-grid col-sm-4"
+                                            data-date="20140430193500" data-name="Web &amp; Interactive"
+                                            data-popularity="21" data-equal-group="1"
+                                            style=" display: inline-block; opacity: 1;"
+                                        >
+                                            <div class="gallery-item__content">
+                                                <figure class="item_img img-intro img-intro__none">
+                                                    <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item.title }}">
+                                                    <div class="more_wrapper">
+                                                        <div class="vert-align">
+                                                            <a title="{{ item.title }}" class="btn btn-info item_more" href="{{ path('offer', { 'slug': item.slug }) }}">
+                                                                <span>Więcej</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </figure>
+                                                <div class="box_inner" style="height: 124px;">
+                                                    <div class="item_header">
+                                                        <h4 class="item_title heading-style-4 visible-first">{{ item.title }}</h4>
+                                                    </div>
+                                                    {% if item.description %}
+                                                        <div class="item_introtext">
+                                                            <p>{{ item.description }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </section>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

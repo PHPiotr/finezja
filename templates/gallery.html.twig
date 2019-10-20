@@ -1,0 +1,172 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('gallery') }}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="content-inner">
+                    <div id="component" class="col-sm-12">
+                        <main>
+                            <div class="gallery">
+                                <header class="page_header">
+                                    <h1 class="heading-style-3 visible-first">Galeria</h1>
+                                </header>
+                                <div class="jg_gallery row cols-3 loaded" id="jg_gallery">
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-value="0"
+                                         style="display: inline-block;
+                                         opacity: 1;"
+                                    >
+                                        <a class="fancybox-thumb" data-title="gallery-image1"
+                                           href="{{ asset('build/images/gallery/gallery-image1.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image1.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image1">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links"><i class="fa fa-search-plus"></i></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-date="20170118195605" data-value="1"
+                                         style="display: inline-block;  opacity: 1;">
+                                        <a class="fancybox-thumb" data-title="gallery-image2"
+                                           href="{{ asset('build/images/gallery/gallery-image2.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image2.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image2">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links">
+                                                            <i class="fa fa-search-plus"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-date="20170118195606" data-value="2"
+                                         style="display: inline-block;  opacity: 1;">
+                                        <a class="fancybox-thumb" data-title="gallery-image3"
+                                           href="{{ asset('build/images/gallery/gallery-image3.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image3.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image3">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links">
+                                                            <i class="fa fa-search-plus"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-date="20170118195608" data-value="3"
+                                         style="display: inline-block;  opacity: 1;">
+                                        <a class="fancybox-thumb" data-title="gallery-image4"
+                                           href="{{ asset('build/images/gallery/gallery-image4.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image4.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image4">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links">
+                                                            <i class="fa fa-search-plus"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-date="20170118195609" data-value="4"
+                                         style="display: inline-block;  opacity: 1;">
+                                        <a class="fancybox-thumb" data-title="gallery-image5"
+                                           href="{{ asset('build/images/gallery/gallery-image5.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image5.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image5">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links">
+                                                            <i class="fa fa-search-plus"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                         data-date="20170118195611" data-value="5"
+                                         style="display: inline-block;  opacity: 1;">
+                                        <a class="fancybox-thumb" data-title="gallery-image6"
+                                           href="{{ asset('build/images/gallery/gallery-image6.jpg') }}"
+                                           data-fancybox="fancybox" data-fancybox-group="joomgallery"
+                                           data-fancybox-type="image"
+                                        >
+                                            <div class="jg_imgalign_catimgs">
+                                                <img src="{{ asset('build/images/gallery/thumbnails/gallery-image6.jpg') }}"
+                                                     class="jg_photo_custom" width="768" height="540" alt="gallery-image6">
+                                                <div class="jg_catelem_txt">
+                                                    <ul>
+                                                        <li class="jg_links">
+                                                            <i class="fa fa-search-plus"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('gallery') }}
+{% endblock %}

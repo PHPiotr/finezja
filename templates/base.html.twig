@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
+<html lang="pl">
+<head>
+    {% if app.environment == 'prod' and ga_code != "" %}
+        {% include 'gtag.html.twig' %}
+    {% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description=" content="{% block description %}Zawsze świeże kwiaty, aby Twoje życie było piękniejsze.{% endblock %}">
+    <meta name="keywords=" content="{% block keywords %}kwiaciarnia,finezja,kwiaciarnia finezja,kwiaciarnia wodzisław,kwiaty wodzisław,{% endblock %}">
+    <title>{% block title %} - Kwiaciarnia Finezja{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('font-awesome') }}
+    {% endblock %}
+    <link href="//fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <div class="wrapper-inner">
+        {% include('base/top.html.twig') %}
+        {% include('base/navigation.html.twig') %}
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+    </div>
+</div>
+{% include('base/footer.html.twig') %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('font-awesome') }}
+{% endblock %}
+</body>
 </html>

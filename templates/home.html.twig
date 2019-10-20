@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% include('home/header.html.twig') %}
+    {% include('home/feature.html.twig') %}
+    {% include('home/content.html.twig') %}
+    {% include('home/mainbottom1.html.twig') %}
+    {% include('home/mainbottom2.html.twig') %}
+    {% include('home/mainbottom3.html.twig') %}
+    {% include('home/mainbottom4.html.twig') %}
+    {% include('home/mainbottom5.html.twig') %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{#    {{ encore_entry_script_tags('home') }}#}
+{% endblock %}

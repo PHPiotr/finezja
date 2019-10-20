@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% include('about/content.html.twig') %}
+{#    {% include('about/mainbottom1.html.twig') %}#}
+    {% include('about/mainbottom2.html.twig') %}
+    {% include('about/mainbottom3.html.twig') %}
+    {% include('about/mainbottom4.html.twig') %}
+    {% include('about/bottom.html.twig') %}
+{% endblock %}

@@ -4,6 +4,22 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    company_name: '%env(COMPANY_NAME)%'
+    company_email: '%env(COMPANY_EMAIL)%'
+    company_phone: '%env(COMPANY_PHONE)%'
+    company_street: '%env(COMPANY_STREET)%'
+    company_zip_code: '%env(COMPANY_ZIP_CODE)%'
+    company_city: '%env(COMPANY_CITY)%'
+    latest_products_api_url: '%env(LATEST_PRODUCTS_API_URL)%'
+    fb_app_id: '%env(FB_APP_ID)%'
+    fb_app_secret: '%env(FB_APP_SECRET)%'
+    fb_app_client_token: '%env(FB_APP_CLIENT_TOKEN)%'
+    email_account_from: '%env(EMAIL_ACCOUNT_FROM)%'
+    email_account_pass: '%env(EMAIL_ACCOUNT_PASS)%'
+    email_account_smtp_host: '%env(EMAIL_ACCOUNT_SMTP_HOST)%'
+    email_account_smtp_port: '%env(EMAIL_ACCOUNT_SMTP_PORT)%'
+    email_account_smtp_secure: '%env(EMAIL_ACCOUNT_SMTP_SECURE)%'
+    email_account_user: '%env(EMAIL_ACCOUNT_USER)%'
 
 services:
     # default configuration for services in *this* file

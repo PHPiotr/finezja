@@ -1,0 +1,122 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="module_container">
+                        <header class="page_header">
+                            <h1 class="heading-style-3 visible-first">Kontakt</h1>
+                        </header>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="content-inner">
+                    <div id="component" class="col-sm-12">
+                        <main>
+                            <div id="system-message-container">
+                            </div>
+                            <div class="page page-contact">
+                                <div class="row">
+                                    <div class="contact_details col-sm-5">
+                                        <h4 class="heading-style-4"><span
+                                                    class="item_title_part_0 item_title_part_odd item_title_part_first_half item_title_part_first item_title_part_last">Adres:</span>
+                                        </h4>
+                                        <div class="contact_address">
+                                            <i class="icons-marker fa fa-home"></i>
+                                            {{ company_street }}; {{ company_zip_code }} {{ company_city }}
+                                        </div>
+                                        <h4 class="heading-style-4"><span
+                                                    class="item_title_part_0 item_title_part_odd item_title_part_first_half item_title_part_first item_title_part_last">Telefon:</span>
+                                        </h4>
+                                        <div class="contact_address">
+                                            <i class="icons-marker fa fa-phone"></i>
+                                            {{ company_phone }}
+                                        </div>
+
+                                        <h4 class="heading-style-4"><span
+                                                    class="item_title_part_0 item_title_part_odd item_title_part_first_half item_title_part_first item_title_part_last">E-mail:</span>
+                                        </h4>
+                                        <div class="contact_address">
+                                            <i class="icons-marker fa fa-envelope"></i>
+                                            <span><a href="mailto:{{ company_email }}" title="{{ company_email }}">{{ company_email }}</a></span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="contact_misc">
+                                            <h4 class="heading-style-4"><span
+                                                        class="item_title_part_0 item_title_part_odd item_title_part_first_half item_title_part_first">Formularz</span>
+                                                <span class="item_title_part_1 item_title_part_even item_title_part_second_half item_title_part_last">kontaktowy:</span>
+                                            </h4>
+                                        </div>
+                                        <div>
+                                            {{ form_start(form, {'attr': {'action': path('contact'), 'novalidate': 'novalidate'}}) }}
+                                            <div class="row">
+                                                <div class="control control-group-input col-sm-12">
+                                                    <div class="text-danger">
+                                                        {{ form_errors(form.name) }}
+                                                    </div>
+                                                    {{ form_widget(form.name) }}
+                                                </div>
+                                                <div class="control control-group-input col-sm-12">
+                                                    <div class="text-danger">
+                                                        {{ form_errors(form.email) }}
+                                                    </div>
+                                                    {{ form_widget(form.email) }}
+                                                </div>
+                                                <div class="control control-group-input col-sm-12">
+                                                    <div class="text-danger">
+                                                        {{ form_errors(form.phone) }}
+                                                    </div>
+                                                    {{ form_widget(form.phone) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="control control-group-input col-sm-12">
+                                                    <div class="text-danger">
+                                                        {{ form_errors(form.message) }}
+                                                    </div>
+                                                    {{ form_widget(form.message) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="control control-group-button col-sm-12">
+                                                    {% for message in app.flashes('success') %}
+                                                        <p class="text-success">{{ message }}</p>
+                                                    {% endfor %}
+                                                    {% for message in app.flashes('danger') %}
+                                                        <p class="text-danger">{{ message }}</p>
+                                                    {% endfor %}
+                                                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-xl text-uppercase' }}) }}
+                                                </div>
+                                            </div>
+                                            {{ form_end(form) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

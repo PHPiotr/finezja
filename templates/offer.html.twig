@@ -1,0 +1,72 @@
+{% extends('base.html.twig') %}
+
+{% block title %}
+    {{ metaTitle }}
+    {{ parent() }}
+{% endblock %}
+{% block description %}
+    {{ metaDescription }}
+    {{ parent() }}
+{% endblock %}
+{% block keywords %}
+    {{ metaKeywords }}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('gallery') }}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="content-inner">
+                    <div id="component" class="col-sm-12">
+                        <main>
+                            <section class="page-gallery page-gallery__works">
+                                <header class="page_header">
+                                    <h3 class="heading-style-3 visible-first">{{ item.title }}</h3>
+                                </header>
+                                <div class="jg_gallery row cols-3 loaded" id="jg_gallery">
+                                    {% for img in item.images %}
+                                        <div class="jg_element_cat mix gallery-grid gallery-item col-sm-4 mix_all"
+                                             data-value="0"
+                                             style="display: inline-block;
+                                             opacity: 1;"
+                                        >
+                                            <a class="fancybox-thumb" data-title="gallery-image1"
+                                               title="{{ img }}"
+                                               href="{{ asset('' ~ img ~ '') }}"
+                                               data-fancybox="fancybox"
+                                               data-fancybox-group="{{ item.slug }}"
+                                               data-fancybox-type="image"
+                                            >
+                                                <div class="jg_imgalign_catimgs">
+                                                    <img src="{{ asset('' ~ img ~ '') }}"
+                                                         class="jg_photo_custom" width="768" height="540" alt="gallery-image1">
+                                                    <div class="jg_catelem_txt">
+                                                        <ul>
+                                                            <li class="jg_links"><i class="fa fa-search-plus"></i></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('gallery') }}
+{% endblock %}

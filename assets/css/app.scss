@@ -1,0 +1,26 @@
+@import "~bootstrap/scss/bootstrap";
+@import './finezja.scss';
+@import './material-icons.scss';
+@import './komento.scss';
+@import './lrstyle.scss';
+@import './fancybox.scss';
+@import './fancybox-buttons.scss';
+@import './fancybox-thumbs.scss';
+@import './finezja-fancybox.scss';
+@import './finezja-portfolio.scss';
+@import './rd-parallax.scss';
+@import './swiper.scss';
+@import './animate.scss';
+@import './navbar.scss';
+
+#wrapper {
+  min-height: 100%;
+  padding-bottom: 401px;
+}
+
+#navigation.stuck {
+  z-index: 1000;
+  top: auto;
+  position: static;
+  width: 1665px;
+}
