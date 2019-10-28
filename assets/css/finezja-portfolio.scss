@@ -1,4 +1,5 @@
 $primary: #3e2723;
+$secondary: #bb624f;
 $secondary05: rgba(187, 97, 79, 0.5);
 
 .page-gallery__works .item_img {
@@ -56,7 +57,7 @@ $secondary05: rgba(187, 97, 79, 0.5);
 .page-gallery__works .gallery-item .item_header h4.item_title a,
 .page-gallery__works .gallery-item .item_header h5.item_title a,
 .page-gallery__works .gallery-item .item_header h6.item_title a {
-  color: #93c567;
+  color: $primary;
 }
 
 .page-gallery__works .gallery-item .item_header h1.item_title a:hover,
@@ -65,7 +66,7 @@ $secondary05: rgba(187, 97, 79, 0.5);
 .page-gallery__works .gallery-item .item_header h4.item_title a:hover,
 .page-gallery__works .gallery-item .item_header h5.item_title a:hover,
 .page-gallery__works .gallery-item .item_header h6.item_title a:hover {
-  color: #777777;
+  color: $secondary;
 }
 
 ul.gallery {
