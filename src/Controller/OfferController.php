@@ -59,6 +59,7 @@ class OfferController extends AbstractController
                 'build/images/offer/bukiety-okolicznosciowe-4.jpg',
                 'build/images/offer/bukiety-okolicznosciowe-5.jpg',
                 'build/images/offer/bukiety-okolicznosciowe-6.jpg',
+                'build/images/offer/bukiety-okolicznosciowe-7.jpg',
             ],
         ],
         'wiazanki-wience-i-palmy-pogrzebowe' => [
