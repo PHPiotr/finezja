@@ -9,6 +9,7 @@
     <meta name="description=" content="{% block description %}Zawsze świeże kwiaty, aby Twoje życie było piękniejsze.{% endblock %}">
     <meta name="keywords=" content="{% block keywords %}kwiaciarnia,finezja,kwiaciarnia finezja,kwiaciarnia wodzisław,kwiaty wodzisław,{% endblock %}">
     <title>{% block title %} - Kwiaciarnia Finezja{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ asset('build/images/favicon.ico') }}" />
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
         {{ encore_entry_link_tags('font-awesome') }}
