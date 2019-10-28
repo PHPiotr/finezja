@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 index:
     path: /
     controller: App\Controller\HomeController::indexAction
