@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ status_code }} {{ status_text }}{{ parent() }}{% endblock %}
+{% block body %}
+    <div id="error">
+        <div
+                id="swiper-slider"
+                class="swiper-container swiper-slider swiper-container-horizontal"
+                data-min-height="546px"
+                data-height="25%"
+                data-autoplay="false"
+                data-loop="false"
+                style="height: 546px;"
+        >
+            <div class="swiper-wrapper">
+                <div
+                        class="swiper-slide swiper-slide-active"
+                        data-slide-bg="{{ asset('build/images/slider/slide-3.jpg') }}"
+                        data-swiper-slide-index="0"
+                        style="background-image: url({{ asset('build/images/slider/slide-3.jpg') }});background-size: cover;width: 811px;"
+                >
+                    <div class="swiper-slide-caption">
+                        <div class="camera_caption">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h1 class="slide-title heading-style-1 visible-first">
+                                            {{ status_code }} {{ status_text }}
+                                        </h1>
+                                        <p class="slide-title heading-style-1 visible-first">
+                                            <a title="Powrót do strony głównej" rel="nofollow" href="{{ path('index') }}">
+                                                Powrót do strony głównej
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
