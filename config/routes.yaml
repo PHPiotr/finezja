@@ -16,3 +16,10 @@ offer:
 contact:
     path: /kontakt
     controller: App\Controller\ContactController::indexAction
+
+sitemap:
+    path: /sitemap.{_format}
+    controller: App\Controller\SitemapController::indexAction
+    format: html
+    requirements:
+        _format: html|xml

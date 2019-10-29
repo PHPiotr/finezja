@@ -24,7 +24,7 @@
                                         >
                                             <div class="gallery-item__content">
                                                 <figure class="item_img img-intro img-intro__none">
-                                                    <a title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
+                                                    <a rel="nofollow" title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
                                                         <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item.title }}">
                                                     </a>
                                                 </figure>

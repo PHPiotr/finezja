@@ -1,3 +1,6 @@
+$primary: #3e2723;
+$secondary: #bb624f;
+
 @import "~bootstrap/scss/bootstrap";
 @import './finezja.scss';
 @import './material-icons.scss';
@@ -25,8 +28,12 @@
   width: 1665px;
 }
 
+#error .swiper-slide h1 {
+  color: $primary;
+}
+
 #error a {
-  color: #fff;
+  color: $primary;
   text-decoration: none;
   font: 16px/30px 'Merriweather', serif;
   text-transform: uppercase;
