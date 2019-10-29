@@ -1,17 +1,8 @@
 {% extends('base.html.twig') %}
 
-{% block title %}
-    {{ metaTitle }}
-    {{ parent() }}
-{% endblock %}
-{% block description %}
-    {{ metaDescription }}
-    {{ parent() }}
-{% endblock %}
-{% block keywords %}
-    {{ metaKeywords }}
-    {{ parent() }}
-{% endblock %}
+{% block title %}{{ metaTitle|trim }}{{ parent() }}{% endblock %}
+{% block description %}{{ metaDescription|trim }}{{ parent() }}{% endblock %}
+{% block keywords %}{{ metaKeywords|trim }}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

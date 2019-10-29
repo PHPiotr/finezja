@@ -8,10 +8,7 @@
     {{ metaDescription }}
     {{ parent() }}
 {% endblock %}
-{% block keywords %}
-    {{ metaKeywords }}
-    {{ parent() }}
-{% endblock %}
+{% block keywords %}{{ metaKeywords|trim }}{{ parent() }}{% endblock %}
 
 {% block body %}
     <div id="content">
