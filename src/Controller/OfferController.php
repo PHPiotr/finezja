@@ -55,6 +55,11 @@ class OfferController extends AbstractController
             'description' => 'Nic nie zastąpi kwiatów.',
             'images' => [
                 'build/images/offer/bukiety-slubne.jpg',
+                'build/images/offer/bukiety-slubne-1.jpg',
+                'build/images/offer/bukiety-slubne-2.jpg',
+                'build/images/offer/bukiety-slubne-3.jpg',
+                'build/images/offer/bukiety-slubne-4.jpg',
+                'build/images/offer/bukiety-slubne-5.jpg',
             ],
         ],
         'bukiety-okolicznosciowe' => [

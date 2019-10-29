@@ -74,7 +74,7 @@ class ContactController extends AbstractController
             'company_city' => $this->getParameter('company_city'),
             'form' => $form->createView(),
             'metaTitle' => 'Kontakt',
-            'metaDescription' => 'ul. Kubsza 23; 44-300 Wodzisław Śl.; tel. 505-175-989',
+            'metaDescription' => 'ul. Kubsza 23; 44-300 Wodzisław Śl.; tel. 505-175-989.',
             'metaKeywords' => 'kubsza,wodzisław,44-300,kubsza 23,505-175-989,',
         ]);
     }
