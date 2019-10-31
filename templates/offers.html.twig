@@ -15,38 +15,23 @@
                                 <header class="page_header">
                                     <h3 class="heading-style-3 visible-first">Oferta</h3>
                                 </header>
-                                <ul id="isotopeContainer" class="gallery items-row row cols-3 hover_false grid loaded">
-                                    {% for item in items %}
-                                        <li class="gallery-item mix mix_all gallery-grid col-sm-4"
-                                            data-date="20140430193500" data-name="Web &amp; Interactive"
-                                            data-popularity="21" data-equal-group="1"
-                                            style=" display: inline-block; opacity: 1;"
-                                        >
-                                            <div class="gallery-item__content">
-                                                <figure class="item_img img-intro img-intro__none">
-                                                    <a rel="nofollow" title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
-                                                        <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item.title }}">
-                                                    </a>
-                                                </figure>
-                                                <div class="box_inner" style="height: 124px;">
-                                                    <div class="item_header">
-                                                        <h4 class="item_title heading-style-4 visible-first">
-                                                            <a title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
-                                                                {{ item.title }}
-                                                            </a>
-                                                        </h4>
-                                                    </div>
-                                                    {% if item.description %}
-                                                        <div class="item_introtext">
-                                                            <p>{{ item.description }}</p>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                <div class="row cols-3">
+                                    <div class="col-sm-4">
+                                        {% for item in items_left %}
+                                            {% include 'offers/item.html.twig' with {'item': item} %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {% for item in items_middle %}
+                                            {% include 'offers/item.html.twig' with {'item': item} %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {% for item in items_right %}
+                                            {% include 'offers/item.html.twig' with {'item': item} %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </section>
                         </main>
                     </div>

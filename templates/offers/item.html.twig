@@ -1,0 +1,22 @@
+<div>
+    <figure class="item_img img-intro img-intro__none">
+        <a rel="nofollow" title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
+            <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item.title }}">
+        </a>
+    </figure>
+    <div class="box_inner">
+        <div class="item_header">
+            <h4 class="item_title heading-style-4 visible-first">
+                <a title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
+                    {{ item.title }}
+                </a>
+            </h4>
+        </div>
+        {% if item.description %}
+            <div class="item_introtext">
+                <p>{{ item.description }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="clearfix"></div>
+</div>
