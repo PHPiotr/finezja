@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Offer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -60,32 +61,33 @@ class OfferController extends AbstractController
         $metaDescription = '';
         $metaKeywords = '';
         $index = 0;
-        $items = array_values((new Offer())->getItems());
-        foreach ($items as $item) {
-            $lowerTitle = mb_strtolower($item['title']);
-            $metaKeywords .= $lowerTitle . ',';
+        $repo = $this->getDoctrine()->getRepository(Category::class);
+        $categories = $repo->findBy([], ['sort' => 'asc']);
+        foreach ($categories as $category) {
+            $lowerName = mb_strtolower($category->getName());
+            $metaKeywords .= $lowerName . ',';
             if ($index++ > 2) {
                 continue;
             }
-            $metaDescription .= $lowerTitle . ', ';
+            $metaDescription .= $lowerName . ', ';
         }
         $metaDescription = rtrim($metaDescription, ', ');
 
         $itemsLeft = $itemsMiddle = $itemsRight = [];
-        $itemsCount = count($items);
+        $itemsCount = count($categories);
         $i = 0;
         while($i < $itemsCount) {
             $left = $i;
             $middle = $i + 1;
             $right = $i + 2;
-            if (isset($items[$left])) {
-                $itemsLeft[] = $items[$left];
+            if (isset($categories[$left])) {
+                $itemsLeft[] = $categories[$left];
             }
-            if (isset($items[$middle])) {
-                $itemsMiddle[] = $items[$middle];
+            if (isset($categories[$middle])) {
+                $itemsMiddle[] = $categories[$middle];
             }
-            if (isset($items[$right])) {
-                $itemsRight[] = $items[$right];
+            if (isset($categories[$right])) {
+                $itemsRight[] = $categories[$right];
             }
             $i += 3;
         }

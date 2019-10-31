@@ -1,22 +1,22 @@
-{% set item_title = item.title %}
+{% set item_title = item.name %}
 {% set path_offer = path('offer', { 'slug': item.slug }) %}
 <div>
     <figure class="item_img img-intro">
         <a rel="nofollow" title="{{ item_title }}" href="{{ path_offer }}">
-            <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item_title }}">
+            <img src="{{ asset('' ~ item.image ~ '') }}" alt="{{ item_title }}">
         </a>
     </figure>
     <div class="box_inner">
         <div class="item_header">
             <h4 class="item_title heading-style-4 visible-first">
                 <a title="{{ item_title }}" href="{{ path_offer }}">
-                    {{ item.title }}
+                    {{ item_title }}
                 </a>
             </h4>
         </div>
-        {% if item.description %}
+        {% if item.shortDescription %}
             <div class="item_introtext">
-                <p>{{ item.description }}</p>
+                <p>{{ item.shortDescription }}</p>
             </div>
         {% endif %}
     </div>
