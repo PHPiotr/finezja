@@ -51,6 +51,7 @@ class Category
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="Category")
+     * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $images;
 
