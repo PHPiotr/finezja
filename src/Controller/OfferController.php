@@ -3,29 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\Offer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OfferController extends AbstractController
 {
-    public function viewAction(string $slug)
+    public function viewAction(Category $category)
     {
-        $items = (new Offer())->getItems();
-        if (!isset($items[$slug])) {
-            throw new Exception('Missing category for ' . $slug);
-        }
-        $item = $items[$slug] ?? null;
-        if (!$item) {
-            throw new NotFoundHttpException('Nie ma takiej kategorii w ofercie.');
-        }
-        $title = $item['title'];
-        $description = $item['description'];
+        $images = $category->getImages();
+
+        $title = $category->getName();
+        $description = $category->getShortDescription();
 
         $imagesLeft = [];
         $imagesMiddle = [];
         $imagesRight = [];
-        $images = $item['images'];
         $imagesLength = count($images);
         $i = 0;
         while ($i < $imagesLength) {
@@ -46,7 +37,7 @@ class OfferController extends AbstractController
 
         return $this->render('offer.html.twig', [
             'active' => 'offer',
-            'item' => $item,
+            'item' => $category,
             'images_left' => $imagesLeft,
             'images_middle' => $imagesMiddle,
             'images_right' => $imagesRight,
