@@ -9,7 +9,7 @@ class HomeController extends AbstractController
     {
         return $this->render('home.html.twig', [
             'active' => 'home',
-            'metaTitle' => 'Wodzisław',
+            'metaTitle' => 'Kwiaciarnia Finezja - Wodzisław Śląski',
             'metaDescription' => 'Bukiety ślubne, palmy pogrzebowe, stroiki, kompozycje, rośliny doniczkowe.',
             'metaKeywords' => 'bukiety,bukiety ślubne,ślubne,palmy pogrzebowe,pogrzebowe,rośliny doniczkowe,kwiaty cięte,kompozycje kwiatowe,',
         ]);
