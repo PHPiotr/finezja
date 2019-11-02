@@ -19,6 +19,9 @@
                             <section class="page-gallery">
                                 <header class="page_header">
                                     <h3 class="heading-style-3">{{ item.name }}</h3>
+                                    {% if item.shortDescription %}
+                                        <h4>{{ item.shortDescription }}</h4>
+                                    {% endif %}
                                 </header>
                                 <div class="row cols-3" id="jg_gallery">
                                     <div class="col-sm-4">
