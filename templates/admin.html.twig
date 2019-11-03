@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ asset('build/images/favicon.ico') }}"/>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('admin') }}
+    {% endblock %}
+</head>
+<body>
+<div id="menu-bar"></div>
+{% block body %}{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('admin') }}
+{% endblock %}
+</body>
+</html>

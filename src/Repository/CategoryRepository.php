@@ -19,32 +19,31 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    // /**
-    //  * @return Category[] Returns an array of Category objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function sortCategories(Category $category, int $oldSort, int $newSort)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        if ($newSort === $oldSort) {
+            return;
+        }
+        $entityManager = $this->getEntityManager();
+        $conn = $entityManager->getConnection();
+        try {
+            $conn->beginTransaction();
+            if ($newSort > $oldSort) {
+                $sql = 'UPDATE categories SET sort = sort - 1 WHERE sort <= :newSort AND sort >= :oldSort';
+            }
+            if ($oldSort > $newSort) {
+                $sql = 'UPDATE categories SET sort = sort + 1 WHERE sort >= :newSort AND sort <= :oldSort';
+            }
+            if (isset($sql)) {
+                $stmt = $conn->prepare($sql);
+                $stmt->execute(['newSort' => $newSort, 'oldSort' => $oldSort]);
+            }
+            $category->setSort($newSort);
+            $entityManager->flush();
+            $conn->commit();
+        } catch (\Exception $e) {
+            $conn->rollBack();
+            throw $e;
+        }
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Category
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ parent() }} - Oferta{% endblock %}
+    {% block stylesheets %}
+        {{ parent() }}
+{#        {{ encore_entry_link_tags('adminCategories') }}#}
+    {% endblock %}
+{% block body %}
+    <div id="categories" class="list-group">
+    {% for category in categories %}
+        <a id="{{ category.slug }}" href="{{ path('adminCategory', { id: category.id}) }}" class="list-group-item list-group-item-action">{{ category.name }}</a>
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('adminCategories') }}
+{% endblock %}

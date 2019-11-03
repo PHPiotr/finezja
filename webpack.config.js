@@ -50,6 +50,8 @@ Encore
     .addEntry('font-awesome', './node_modules/font-awesome/css/font-awesome.min.css')
     .addEntry('home', './assets/js/home.js')
     .addEntry('gallery', './assets/js/gallery.js')
+    .addEntry('admin', './assets/js/admin.js')
+    .addEntry('adminCategories', './assets/js/admin/categories.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
