@@ -7,7 +7,10 @@
 {% block body %}
     <div id="categories" class="list-group">
     {% for category in categories %}
-        <a id="{{ category.slug }}" href="{{ path('adminCategory', { id: category.id}) }}" class="list-group-item list-group-item-action">{{ category.name }}</a>
+        <a id="{{ category.slug }}" href="{{ path('adminCategory', { id: category.id}) }}" class="list-group-item list-group-item-action">
+            <i class="fa fa-sort"></i>
+            {{ category.name }}
+        </a>
     {% endfor %}
     </div>
 {% endblock %}

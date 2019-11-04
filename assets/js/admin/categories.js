@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const categories = document.getElementById('categories');
 Sortable.create(categories, {
+    handle: '.fa-sort',
     onEnd: async evt => {
         const {oldIndex, newIndex} = evt;
         if (oldIndex === newIndex) {
