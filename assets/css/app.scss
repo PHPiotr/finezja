@@ -38,3 +38,22 @@ $secondary: #bb624f;
   font: 16px/30px 'Merriweather', serif;
   text-transform: uppercase;
 }
+
+@media(max-width: 575px) {
+  .three-columns-layout {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+@media(min-width: 576px) {
+  .one-column-layout {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.item_header h4.item_title.heading-style-4 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

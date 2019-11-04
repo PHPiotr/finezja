@@ -24,7 +24,17 @@
                                     {% endif %}
                                 </header>
                                 <div class="row cols-3" id="jg_gallery">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 one-column-layout">
+                                        {% if item.longDescription %}
+                                            <div class="col-sm-12">
+                                                <h5 class="heading-style-5 text-justify">{{ item.longDescription }}</h5>
+                                            </div>
+                                        {% endif %}
+                                        {% for img in images %}
+                                            {% include 'offer/item.html.twig' with {'slug': item.slug, 'img': img} %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% if item.longDescription %}
                                         <div class="col-sm-12">
                                             <h5 class="heading-style-5 text-justify">{{ item.longDescription }}</h5>
@@ -34,12 +44,12 @@
                                             {% include 'offer/item.html.twig' with {'slug': item.slug, 'img': img} %}
                                         {% endfor %}
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% for img in images_middle %}
                                             {% include 'offer/item.html.twig' with {'slug': item.slug, 'img': img} %}
                                         {% endfor %}
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% for img in images_right %}
                                             {% include 'offer/item.html.twig' with {'slug': item.slug, 'img': img} %}
                                         {% endfor %}

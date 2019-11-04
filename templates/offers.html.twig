@@ -17,17 +17,22 @@
                                     <h4>Zapraszamy do skorzystania z naszej bogatej oferty.</h4>
                                 </header>
                                 <div class="row cols-3">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 one-column-layout">
+                                        {% for item in items %}
+                                            {% include 'offers/item.html.twig' with {'item': item} %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% for item in items_left %}
                                             {% include 'offers/item.html.twig' with {'item': item} %}
                                         {% endfor %}
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% for item in items_middle %}
                                             {% include 'offers/item.html.twig' with {'item': item} %}
                                         {% endfor %}
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 three-columns-layout">
                                         {% for item in items_right %}
                                             {% include 'offers/item.html.twig' with {'item': item} %}
                                         {% endfor %}
