@@ -20,7 +20,7 @@
                                         <div class="gallery-item__content">
                                             <figure class="item_img img-intro img-intro__none">
                                                 <a rel="nofollow" title="Strona główna" href="{{ path('index') }}">
-                                                    <img src="{{ asset('build/images/offer/bukiety-okolicznosciowe-1.jpg') }}" alt="Strona główna">
+                                                    <img src="{{ absolute_url('/images/offer/bukiety-okolicznosciowe-1.jpg') }}" alt="Strona główna">
                                                 </a>
                                             </figure>
                                             <div class="box_inner" style="height: 124px;">
@@ -39,7 +39,7 @@
                                         <div class="gallery-item__content">
                                             <figure class="item_img img-intro img-intro__none">
                                                 <a rel="nofollow" title="O nas" href="{{ path('about') }}">
-                                                    <img src="{{ asset('build/images/o-nas.jpg') }}" alt="O nas">
+                                                    <img src="{{ absolute_url('/images/o-nas.jpg') }}" alt="O nas">
                                                 </a>
                                             </figure>
                                             <div class="box_inner" style="height: 124px;">
@@ -58,7 +58,7 @@
                                         <div class="gallery-item__content">
                                             <figure class="item_img img-intro img-intro__none">
                                                 <a rel="nofollow" title="Oferta" href="{{ path('offers') }}">
-                                                    <img src="{{ asset('build/images/offer/wszystkich-swietych_24.jpg') }}" alt="Oferta">
+                                                    <img src="{{ absolute_url('/images/offer/wszystkich-swietych_24.jpg') }}" alt="Oferta">
                                                 </a>
                                             </figure>
                                             <div class="box_inner" style="height: 124px;">
@@ -77,15 +77,15 @@
                                         <li class="gallery-item mix mix_all gallery-grid col-sm-4" style=" display: inline-block; opacity: 1;">
                                             <div class="gallery-item__content">
                                                 <figure class="item_img img-intro img-intro__none">
-                                                    <a rel="nofollow" title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
-                                                        <img src="{{ asset('' ~ item.img ~ '') }}" alt="{{ item.title }}">
+                                                    <a rel="nofollow" title="{{ item.name }}" href="{{ path('offer', { 'slug': item.slug }) }}">
+                                                        <img src="{{ absolute_url('' ~ item.image ~ '') }}" alt="{{ item.name }}">
                                                     </a>
                                                 </figure>
                                                 <div class="box_inner" style="height: 124px;">
                                                     <div class="item_header">
                                                         <h4 class="item_title heading-style-4 visible-first">
-                                                            <a title="{{ item.title }}" href="{{ path('offer', { 'slug': item.slug }) }}">
-                                                                {{ item.title }}
+                                                            <a title="{{ item.name }}" href="{{ path('offer', { 'slug': item.slug }) }}">
+                                                                {{ item.name }}
                                                             </a>
                                                         </h4>
                                                     </div>
@@ -98,7 +98,7 @@
                                         <div class="gallery-item__content">
                                             <figure class="item_img img-intro img-intro__none">
                                                 <a rel="nofollow" title="Kontakt" href="{{ path('contact') }}">
-                                                    <img src="{{ asset('build/images/offer/bukiety-slubne-2.jpg') }}" alt="Kontakt">
+                                                    <img src="{{ absolute_url('/images/offer/bukiety-slubne-2.jpg') }}" alt="Kontakt">
                                                 </a>
                                             </figure>
                                             <div class="box_inner" style="height: 124px;">
