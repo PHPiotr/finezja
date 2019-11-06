@@ -46,4 +46,19 @@ class CategoryRepository extends ServiceEntityRepository
             throw $e;
         }
     }
+
+    public function getMaxSort()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT sort FROM categories c
+            ORDER BY c.sort DESC
+            LIMIT 1
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 }

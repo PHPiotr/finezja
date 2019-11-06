@@ -20,6 +20,7 @@ parameters:
     email_account_smtp_port: '%env(EMAIL_ACCOUNT_SMTP_PORT)%'
     email_account_smtp_secure: '%env(EMAIL_ACCOUNT_SMTP_SECURE)%'
     email_account_user: '%env(EMAIL_ACCOUNT_USER)%'
+    images_directory: '%kernel.project_dir%/public/images'
 
 services:
     # default configuration for services in *this* file

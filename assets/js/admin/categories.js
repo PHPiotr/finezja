@@ -1,3 +1,12 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import FloatingAddButton from '../components/admin/FloatingAddButton';
+
+ReactDOM.render(
+    <FloatingAddButton href="/admin/oferta/nowa-kategoria" />
+    , document.getElementById('floating-add-btn')
+);
+
 import Sortable from 'sortablejs';
 import axios from 'axios';
 

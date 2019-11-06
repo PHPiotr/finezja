@@ -52,6 +52,7 @@ Encore
     .addEntry('gallery', './assets/js/gallery.js')
     .addEntry('admin', './assets/js/admin.js')
     .addEntry('adminCategories', './assets/js/admin/categories.js')
+    .addEntry('adminCategoriesNew', './assets/js/admin/categories/new.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
