@@ -13,6 +13,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
+import MessageBar from './MessageBar';
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -38,6 +39,11 @@ const NewCategory = props => {
     const [shortDescription, setShortDescription] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [image, setImage] = useState('');
+    const [message, setMessage] = useState('');
+    const [variant, setVariant] = useState('info');
+    const [open, setOpen] = useState(false);
+
+    const handleClose = () => setOpen(!open);
 
     const [fileNames, setFileNames] = useState([]);
     const [filesByName, setFilesByName] = useState({});
@@ -74,15 +80,33 @@ const NewCategory = props => {
             data.append(`images_${i}`, filesByName[fileName].file);
         });
 
-        const result = await axios(`/admin/categories/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            data,
-        });
+        try {
+            const result = await axios(`/admin/categories/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                data,
+            });
 
-        window.location.href = '/admin/oferta';
+            targetFileNames = [];
+            targetFilesByName = {};
+
+            setCategoryName('');
+            setShortDescription('');
+            setLongDescription('');
+            setImage('');
+            setFileNames([]);
+            setFilesByName({});
+
+            setOpen(true);
+            setMessage('Kategoria dodana');
+            setVariant('success');
+        } catch (e) {
+            setOpen(true);
+            setMessage(e.message);
+            setVariant('error');
+        }
     };
     const handleRemoveFile = name => () => {
         targetFileNames = targetFileNames.filter(fileName => fileName !== name);
@@ -190,6 +214,7 @@ const NewCategory = props => {
                         onClick={handleCreateCategory}
                     >Utwórz kategorię oferty</Button>
                 </Box>
+                <MessageBar open={open} message={message} variant={variant} handleClose={handleClose} />
             </Container>
         </Fragment>
     );
