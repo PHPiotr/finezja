@@ -1,5 +1,5 @@
 $primary: #3e2723;
-$secondary: #bb624f;
+$secondary: #A8165B;
 
 html {
   font-family: sans-serif;
@@ -1490,7 +1490,7 @@ h1.heading-style-5, h2.heading-style-5, h3.heading-style-5, h4.heading-style-5, 
 }
 
 h1.heading-style-6, h2.heading-style-6, h3.heading-style-6, h4.heading-style-6, h5.heading-style-6, h6.heading-style-6 {
-  color: #be1e2d;
+  color: $secondary;
   font-size: 14px;
   font-weight: 900;
   margin-bottom: 20px;
@@ -1498,7 +1498,7 @@ h1.heading-style-6, h2.heading-style-6, h3.heading-style-6, h4.heading-style-6, 
 }
 
 h1.heading-style-6 a, h2.heading-style-6 a, h3.heading-style-6 a, h4.heading-style-6 a, h5.heading-style-6 a, h6.heading-style-6 a {
-  color: #be1e2d;
+  color: $secondary;
   text-decoration: none
 }
 
@@ -9942,12 +9942,12 @@ div#fixed-sidebar-right .moduletable.login .mod_login_wrapper .input-prepend .ad
 
 .icemegamenu > ul > li > a.iceMenuTitle:hover, .icemegamenu > ul > li > a.iceMenuTitle.hover, .icemegamenu > ul > li > a.iceMenuTitle.icemega_active {
   color: #fff;
-  background: #bb624f
+  background: $secondary
 }
 
 .icemegamenu > ul > li.active > a.iceMenuTitle, .icemegamenu > ul > li.hover > a.iceMenuTitle {
   color: #fff;
-  background: #bb624f
+  background: $secondary
 }
 
 .icemegamenu > ul > li.active > a.iceMenuTitle.menu-login-form, .icemegamenu > ul > li.hover > a.iceMenuTitle.menu-login-form {
@@ -9990,7 +9990,7 @@ ul.icesubMenu {
   -o-transform: translate(0, 30px);
   transform: translate(0, 30px);
   z-index: 9999;
-  background: #bb624f;
+  background: $secondary;
   border: none
 }
 
@@ -10515,7 +10515,7 @@ body:not(.modal-open) .stuck {
 
 .mod-article-single.mod-article-single__custom .readmore {
   background: 0 0;
-  color: #be1e2d;
+  color: $secondary;
   padding: 0;
   font-size: 14px;
   line-height: 20px;
