@@ -34,8 +34,8 @@ let targetFileNames = [];
 let targetFilesByName = {};
 
 const NewCategory = props => {
-    const isEditMode = !!props.category;
-    const {category = {}} = props;
+    const [category, setCategory] = useState(props.category || {});
+    const isEditMode = !!category.id;
     const classes = useStyles();
     const [categoryName, setCategoryName] = useState(category.name || '');
     const [shortDescription, setShortDescription] = useState(category.shortDescription || '');
@@ -68,7 +68,7 @@ const NewCategory = props => {
         }, {});
         setFileNames(targetFileNames);
         setFilesByName(targetFilesByName);
-    }, [props.category]);
+    }, [category]);
 
     const handleFileInputChange = e => {
         const newFiles = Array.from(e.target.files);
@@ -119,9 +119,11 @@ const NewCategory = props => {
             });
 
             if (isEditMode) {
+                setCategory(result.data.category);
                 setOpen(true);
                 setMessage('Kategoria zmieniona');
                 setVariant('success');
+                setImagesToRemove([]);
             } else {
                 targetFileNames = [];
                 targetFilesByName = {};

@@ -1,21 +1,12 @@
 {% extends 'admin/base.html.twig' %}
 {% block title %}{{ parent() }} - Oferta{% endblock %}
-    {% block stylesheets %}
-        {{ parent() }}
-{#        {{ encore_entry_link_tags('adminCategories') }}#}
-    {% endblock %}
 {% block body %}
-    <div id="categories" class="list-group">
-    {% for category in categories %}
-        <a id="{{ category.slug }}" href="{{ path('adminCategory', { id: category.id}) }}" class="list-group-item list-group-item-action">
-            <i class="fa fa-sort"></i>
-            {{ category.name }}
-        </a>
-    {% endfor %}
-    </div>
-    <div id="floating-add-btn"></div>
+    <div id="list"></div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        const categories = '{{ categoriesJson|raw }}';
+    </script>
     {{ encore_entry_script_tags('adminCategories') }}
 {% endblock %}

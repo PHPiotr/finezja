@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Image;
 use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
@@ -33,10 +34,14 @@ class CategoryController extends AbstractController
                 'slug' => $category->getSlug(),
                 'name' => $category->getName(),
                 'sort' => $category->getSort(),
+                'image' => $category->getImage(),
             ];
         }
 
-        return $this->render('admin/categories/list.html.twig', ['categories' => $data]);
+        return $this->render('admin/categories/list.html.twig', [
+            'categories' => $data,
+            'categoriesJson' => json_encode($data, JSON_UNESCAPED_UNICODE),
+        ]);
     }
 
     /**
@@ -50,12 +55,11 @@ class CategoryController extends AbstractController
     /**
      * @Route("/admin/categories/add", methods={"POST"}, name="addCategory")
      * @param ValidatorInterface $validator
+     * @param Request $request
      * @return JsonResponse
      */
-    public function addAction(ValidatorInterface $validator)
+    public function addAction(ValidatorInterface $validator, Request $request)
     {
-        $request = Request::createFromGlobals();
-
         $slugify = new Slugify();
 
         $category = new Category();
@@ -130,25 +134,25 @@ class CategoryController extends AbstractController
                 'slug' => $category->getSlug(),
                 'sort' => $category->getSort(),
                 'image' => $category->getImage(),
-                'images' => array_map(function($image) {
+                'images' => array_values(array_map(function($image) {
                     return [
                         'name' => $image->getName(),
                         'sort' => $image->getSort(),
                     ];
-                }, $category->getImages()->toArray()),
+                }, $category->getImages()->toArray())),
             ],
         ]);
     }
 
     /**
      * @Route("/admin/categories/{id}", methods={"POST"}, name="editCategory")
+     * @param Category $category
+     * @param Request $request
      * @param ValidatorInterface $validator
      * @return JsonResponse
      */
-    public function editAction(Category $category, ValidatorInterface $validator)
+    public function editAction(Category $category, Request $request, ValidatorInterface $validator)
     {
-        $request = Request::createFromGlobals();
-
         $slugify = new Slugify();
         $categoryImage = $request->request->get('image');
 
@@ -239,12 +243,12 @@ class CategoryController extends AbstractController
                 'slug' => $category->getSlug(),
                 'sort' => $category->getSort(),
                 'image' => $category->getImage(),
-                'images' => array_map(function($image) {
+                'images' => array_values(array_map(function($image) {
                     return [
                         'name' => $image->getName(),
                         'sort' => $image->getSort(),
                     ];
-                }, $category->getImages()->toArray()),
+                }, $category->getImages()->toArray())),
             ],
         ]);
     }
@@ -264,12 +268,12 @@ class CategoryController extends AbstractController
             'longDescription' => $category->getLongDescription(),
             'image' => $category->getImage(),
             'sort' => $category->getSort(),
-            'images' => array_map(function($image) {
+            'images' => array_values(array_map(function($image) {
                 return [
                     'name' => $image->getName(),
                     'sort' => $image->getSort(),
                 ];
-            }, $category->getImages()->toArray()),
+            }, $category->getImages()->toArray())),
         ], JSON_UNESCAPED_UNICODE)]);
     }
 
@@ -305,5 +309,43 @@ class CategoryController extends AbstractController
             'oldSort' => $oldSort,
             'newSort' => $newSort,
         ]);
+    }
+
+    /**
+     * @Route("/admin/categories/{id}", methods={"DELETE"}, name="adminDeleteCategory")
+     * @param Category $category
+     * @return Response
+     * @throws \Exception
+     */
+    public function deleteCategory(Category $category)
+    {
+        $conn = $this->getDoctrine()->getConnection();
+        $entityManager = $this->getDoctrine()->getManager();
+        $publicDir = $this->getParameter('public_directory');
+        $filesystem = new Filesystem();
+        try {
+            $conn->beginTransaction();
+            foreach ($category->getImages()->toArray() as $image) {
+                $category->removeImage($image);
+                $entityManager->remove($image);
+                $imagePath = $publicDir . $image->getName();
+                try {
+                    if ($filesystem->exists($imagePath)) {
+                        $filesystem->remove($imagePath);
+                    }
+                } catch (IOExceptionInterface $e) {
+                    // TODO: Log failed deletions.
+                }
+            }
+            $entityManager->remove($category);
+            $entityManager->flush();
+            $conn->commit();
+            $response = new Response();
+            $response->setStatusCode(204);
+            return $response;
+        } catch (\Exception $e) {
+            $conn->rollBack();
+            throw $e;
+        }
     }
 }
