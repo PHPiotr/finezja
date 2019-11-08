@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20c4bd9c5688b2069ef4d69dc7aca5bd",
+    "content-hash": "089675fa6288d473e9708e9d0081b666",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -2983,7 +2983,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.3.5",
+            "version": "v4.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",

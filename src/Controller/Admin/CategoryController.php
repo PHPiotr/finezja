@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Image;
 use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,7 +63,6 @@ class CategoryController extends AbstractController
         $category->setSlug($slugify->slugify($category->getName()));
         $category->setShortDescription($request->request->get('shortDescription'));
         $category->setLongDescription($request->request->get('longDescription'));
-        $category->setLongDescription($request->request->get('longDescription'));
 
         $categoryImage = $request->request->get('image');
         $slug = $category->getSlug();
@@ -73,15 +73,103 @@ class CategoryController extends AbstractController
         $categorySort = $repo->getMaxSort();
         $category->setSort($categorySort + 1);
         $entityManager = $this->getDoctrine()->getManager();
-        $key = 0;
+        $mainCategoryImageName = '';
+        $succeeded = [];
+        $uploadDir = $this->getParameter('images_directory') . '/offer';
+        foreach ($uploadedFiles as $uploadedFile) {
+            $clientOriginalName = $uploadedFile->getClientOriginalName();
+            $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
+            $originalExtension = pathinfo($clientOriginalName, PATHINFO_EXTENSION);
+            $newFilename = sprintf('%s-%s.%s', $slug, uniqid(), $originalExtension);
+            if (strpos($categoryImage, $originalFilename) !== false) {
+                $category->setImage("/images/offer/{$newFilename}");
+                $mainCategoryImageName = $clientOriginalName;
+            }
+            try {
+                $uploadedFile->move($uploadDir, $newFilename);
+                $succeeded[] = $newFilename;
+            } catch (FileException $e) {
+                $failedUploads[$clientOriginalName] = [$e->getMessage()];
+            } catch (IniSizeFileException $e) {
+                $failedUploads[$clientOriginalName] = [$e->getMessage()];
+            }
+            if (!isset($failedUploads[$clientOriginalName])) {
+                $image = new Image();
+                $image->setName("/images/offer/{$newFilename}");
+                $image->setSort($imagesSort++);
+
+                $errors = $validator->validate($image);
+                if (count($errors) > 0) {
+                    $failedUploads[$clientOriginalName] = $errors;
+                    continue;
+                }
+
+                $entityManager->persist($image);
+                $category->addImage($image);
+            }
+        }
+
+        $errors = $validator->validate($category);
+        if (count($errors) > 0) {
+            return $this->json(['errors' => $errors], 400);
+        }
+        if (isset($failedUploads[$mainCategoryImageName])) {
+            $category->setImage(sprintf('%s', isset($succeeded[0]) ? '/images/offer/'.$succeeded[0] : ''));
+        }
+        $entityManager->persist($category);
+        $entityManager->flush();
+
+        return $this->json([
+            'succeededUploads' => $succeeded,
+            'failedUploads' => $failedUploads,
+            'category' => [
+                'id' => $category->getId(),
+                'name' => $category->getName(),
+                'shortDescription' => $category->getShortDescription(),
+                'longDescription' => $category->getLongDescription(),
+                'slug' => $category->getSlug(),
+                'sort' => $category->getSort(),
+                'image' => $category->getImage(),
+                'images' => array_map(function($image) {
+                    return [
+                        'name' => $image->getName(),
+                        'sort' => $image->getSort(),
+                    ];
+                }, $category->getImages()->toArray()),
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/categories/{id}", methods={"POST"}, name="editCategory")
+     * @param ValidatorInterface $validator
+     * @return JsonResponse
+     */
+    public function editAction(Category $category, ValidatorInterface $validator)
+    {
+        $request = Request::createFromGlobals();
+
+        $slugify = new Slugify();
+        $categoryImage = $request->request->get('image');
+
+        $category->setName($request->request->get('name'));
+        $category->setSlug($slugify->slugify($category->getName()));
+        $category->setShortDescription($request->request->get('shortDescription'));
+        $category->setLongDescription($request->request->get('longDescription'));
+        $category->setImage($request->request->get('image'));
+
+        $slug = $category->getSlug();
+        $uploadedFiles = $request->files->all();
+        $failedUploads = [];
+        $imagesSort = 1;
+        $entityManager = $this->getDoctrine()->getManager();
         $mainCategoryImageName = '';
         $succeeded = [];
         foreach ($uploadedFiles as $uploadedFile) {
             $clientOriginalName = $uploadedFile->getClientOriginalName();
             $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
             $originalExtension = pathinfo($clientOriginalName, PATHINFO_EXTENSION);
-            $newFilename = sprintf('%s%s.%s', $slug, $key === 0 ? '' : "-{$key}", $originalExtension);
-            $key++;
+            $newFilename = sprintf('%s-%s.%s', $slug, uniqid(), $originalExtension);
             if (strpos($categoryImage, $originalFilename) !== false) {
                 $category->setImage("/images/offer/{$newFilename}");
                 $mainCategoryImageName = $clientOriginalName;
@@ -97,13 +185,10 @@ class CategoryController extends AbstractController
             } catch (IniSizeFileException $e) {
                 $failedUploads[$clientOriginalName] = $e->getMessage();
             }
-            if (isset($failedUploads[$clientOriginalName])) {
-
-            } else {
+            if (!isset($failedUploads[$clientOriginalName])) {
                 $image = new Image();
                 $image->setName("/images/offer/{$newFilename}");
                 $image->setSort($imagesSort++);
-                $image->setCategory($category);
 
                 $errors = $validator->validate($image);
                 if (count($errors) > 0) {
@@ -111,6 +196,7 @@ class CategoryController extends AbstractController
                 }
 
                 $entityManager->persist($image);
+                $category->addImage($image);
             }
         }
 
@@ -118,13 +204,27 @@ class CategoryController extends AbstractController
         if (count($errors) > 0) {
             return $this->json(['errors' => $errors], 400);
         }
-        if (!$succeeded) {
-            return $this->json(['not ok']);
-        }
 
         if (isset($failedUploads[$mainCategoryImageName])) {
-            $category->setImage('/images/offer/'.$succeeded[0]);
+            $category->setImage(sprintf('%s', isset($succeeded[0]) ? '/images/offer/'.$succeeded[0] : ''));
         }
+
+        $filesystem = new Filesystem();
+        $imagesToRemove = json_decode($request->request->get('imagesToRemove'));
+        $imageRepo = $this->getDoctrine()->getRepository(Image::class);
+        $publicDir = $this->getParameter('public_directory');
+        foreach ($imagesToRemove as $name) {
+            $image = $imageRepo->findOneByName($name);
+            if (!$image) {
+                continue;
+            }
+            $category->removeImage($image);
+            $pathToImage = $publicDir . $image->getName();
+            if ($filesystem->exists($pathToImage)) {
+                $filesystem->remove([$pathToImage]);
+            }
+        }
+
         $entityManager->persist($category);
         $entityManager->flush();
 
@@ -134,10 +234,17 @@ class CategoryController extends AbstractController
             'category' => [
                 'id' => $category->getId(),
                 'name' => $category->getName(),
+                'shortDescription' => $category->getShortDescription(),
+                'longDescription' => $category->getLongDescription(),
                 'slug' => $category->getSlug(),
-                'image' => $category->getImage(),
-                'images' => $category->getImages(),
                 'sort' => $category->getSort(),
+                'image' => $category->getImage(),
+                'images' => array_map(function($image) {
+                    return [
+                        'name' => $image->getName(),
+                        'sort' => $image->getSort(),
+                    ];
+                }, $category->getImages()->toArray()),
             ],
         ]);
     }
@@ -147,12 +254,23 @@ class CategoryController extends AbstractController
      * @param Category $category
      * @return Response
      */
-    public function editAction(Category $category)
+    public function renderEditAction(Category $category)
     {
-        $repo = $this->getDoctrine()->getRepository(Category::class);
-        $categories = $repo->findBy([], ['sort' => 'ASC']);
-
-        return $this->render('admin/categories.html.twig', ['categories' => $categories]);
+        return $this->render('admin/categories/edit.html.twig', ['category' => json_encode([
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'slug' => $category->getSlug(),
+            'shortDescription' => $category->getShortDescription(),
+            'longDescription' => $category->getLongDescription(),
+            'image' => $category->getImage(),
+            'sort' => $category->getSort(),
+            'images' => array_map(function($image) {
+                return [
+                    'name' => $image->getName(),
+                    'sort' => $image->getSort(),
+                ];
+            }, $category->getImages()->toArray()),
+        ], JSON_UNESCAPED_UNICODE)]);
     }
 
     /**

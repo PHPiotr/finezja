@@ -1,0 +1,15 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ parent() }} - Edycja kategorii{% endblock %}
+    {% block stylesheets %}
+        {{ parent() }}
+    {% endblock %}
+{% block body %}
+    <div id="edit"></div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const category = '{{ category|raw }}';
+    </script>
+    {{ encore_entry_script_tags('adminCategoriesEdit') }}
+{% endblock %}

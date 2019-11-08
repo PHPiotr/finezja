@@ -34,11 +34,16 @@ let targetFileNames = [];
 let targetFilesByName = {};
 
 const NewCategory = props => {
+    const isEditMode = !!props.category;
+    const {category = {}} = props;
     const classes = useStyles();
-    const [categoryName, setCategoryName] = useState('');
-    const [shortDescription, setShortDescription] = useState('');
-    const [longDescription, setLongDescription] = useState('');
-    const [image, setImage] = useState('');
+    const [categoryName, setCategoryName] = useState(category.name || '');
+    const [shortDescription, setShortDescription] = useState(category.shortDescription || '');
+    const [longDescription, setLongDescription] = useState(category.longDescription || '');
+    const [image, setImage] = useState(category.image || '');
+    const [imagesToRemove, setImagesToRemove] = useState([]);
+
+    // snackbar state
     const [message, setMessage] = useState('');
     const [variant, setVariant] = useState('info');
     const [open, setOpen] = useState(false);
@@ -47,6 +52,23 @@ const NewCategory = props => {
 
     const [fileNames, setFileNames] = useState([]);
     const [filesByName, setFilesByName] = useState({});
+
+    useEffect(() => {
+        if (!isEditMode) {
+            return;
+        }
+        targetFileNames = (category.images || []).map(i => i.name);
+        targetFilesByName = (category.images || []).reduce((acc, curr) => {
+            acc[curr.name] = {
+                file: null,
+                name: curr.name,
+                url: curr.name,
+            };
+            return acc;
+        }, {});
+        setFileNames(targetFileNames);
+        setFilesByName(targetFilesByName);
+    }, [props.category]);
 
     const handleFileInputChange = e => {
         const newFiles = Array.from(e.target.files);
@@ -77,11 +99,18 @@ const NewCategory = props => {
         data.append('longDescription', longDescription);
 
         fileNames.forEach((fileName, i) => {
-            data.append(`images_${i}`, filesByName[fileName].file);
+            const {file} = filesByName[fileName];
+            if (file) {
+                data.append(`images_${i}`, file);
+            }
         });
 
+        if (isEditMode) {
+            data.append('imagesToRemove', JSON.stringify(imagesToRemove));
+        }
+
         try {
-            const result = await axios(`/admin/categories/add`, {
+            const result = await axios(isEditMode ? `/admin/categories/${category.id}` : `/admin/categories/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -89,19 +118,25 @@ const NewCategory = props => {
                 data,
             });
 
-            targetFileNames = [];
-            targetFilesByName = {};
+            if (isEditMode) {
+                setOpen(true);
+                setMessage('Kategoria zmieniona');
+                setVariant('success');
+            } else {
+                targetFileNames = [];
+                targetFilesByName = {};
 
-            setCategoryName('');
-            setShortDescription('');
-            setLongDescription('');
-            setImage('');
-            setFileNames([]);
-            setFilesByName({});
+                setCategoryName('');
+                setShortDescription('');
+                setLongDescription('');
+                setImage('');
+                setFileNames([]);
+                setFilesByName({});
 
-            setOpen(true);
-            setMessage('Kategoria dodana');
-            setVariant('success');
+                setOpen(true);
+                setMessage('Kategoria dodana');
+                setVariant('success');
+            }
         } catch (e) {
             setOpen(true);
             setMessage(e.message);
@@ -116,6 +151,9 @@ const NewCategory = props => {
         }
         setFileNames(fileNames.filter(fileName => fileName !== name));
         setFilesByName({...filesByName, [name]: undefined});
+        if (isEditMode && (category.images || []).find(i => i.name === name)) {
+            setImagesToRemove([...imagesToRemove, name]);
+        }
     };
 
     return (
@@ -212,7 +250,7 @@ const NewCategory = props => {
                         className={classes.button}
                         disabled={!categoryName || fileNames.length === 0 || !image}
                         onClick={handleCreateCategory}
-                    >Utwórz kategorię oferty</Button>
+                    >{`${props.category ? 'Edytuj' : 'Utwórz'} kategorię oferty`}</Button>
                 </Box>
                 <MessageBar open={open} message={message} variant={variant} handleClose={handleClose} />
             </Container>
