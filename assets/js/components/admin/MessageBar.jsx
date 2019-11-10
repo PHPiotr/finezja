@@ -60,7 +60,7 @@ function MySnackbarContentWrapper(props) {
                     {message}
         </span>
             }
-            action={[
+            action={onClose === null ? [] : [
                 <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
                     <CloseIcon className={classes.icon}/>
                 </IconButton>,
@@ -99,11 +99,12 @@ MessageBar.propTypes = {
     open: PropTypes.bool.isRequired,
     variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']),
     message: PropTypes.string.isRequired,
-    handleClose: PropTypes.func.isRequired,
+    handleClose: PropTypes.func,
 };
 
 MessageBar.defaultProps = {
     variant: 'success',
+    handleClose: null,
 };
 
 export default MessageBar;

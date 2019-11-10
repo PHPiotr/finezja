@@ -48,7 +48,7 @@ const SortableItem = SortableElement(({id, idx, text, image, onDeleteClick}) => 
 const SortableListContainer = SortableContainer(({items, onDeleteClick}) => (
     <List component="div">
         {items.map(({id, name, image}, index) => (
-            <SortableItem key={id} idx={index} text={name} image={image} id={id} onDeleteClick={onDeleteClick}/>
+            <SortableItem key={id} index={index} idx={index} text={name} image={image} id={id} onDeleteClick={onDeleteClick}/>
         ))}
     </List>
 ));

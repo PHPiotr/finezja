@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const ConfirmationDialog = props => {
 
     const handleConfirm = () => {
-        props.onConfirm();s
+        props.onConfirm();
     };
 
     const handleCancel = () => {
