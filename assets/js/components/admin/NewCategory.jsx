@@ -11,8 +11,11 @@ import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DragHandleIcon from "@material-ui/icons/DragHandle";
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
+import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 import MessageBar from './MessageBar';
 
 const useStyles = makeStyles(theme => ({
@@ -32,6 +35,75 @@ const useStyles = makeStyles(theme => ({
 
 let targetFileNames = [];
 let targetFilesByName = {};
+
+const DragHandle = SortableHandle(() => (
+    <IconButton>
+        <DragHandleIcon/>
+    </IconButton>
+));
+
+const SortableItem = SortableElement(({
+    classes,
+    name,
+    url,
+    image,
+    handleSetImage,
+    handleRemoveFile,
+}) => (
+    <Card className={classes.card}>
+        <CardMedia
+            className={classes.media}
+            image={url}
+        />
+        <CardActions disableSpacing>
+            <DragHandle/>
+            <IconButton
+                aria-label="Dodaj jako główne"
+                onClick={handleSetImage(name)}
+                disabled={name === image}
+            >
+                <FavoriteIcon color={name === image ? `primary` : `disabled`}/>
+            </IconButton>
+            <IconButton
+                aria-label="Usuń zdjęcie"
+                onClick={handleRemoveFile(name)}
+            >
+                <DeleteIcon color="secondary"/>
+            </IconButton>
+        </CardActions>
+    </Card>
+));
+
+const SortableListContainer = SortableContainer(({
+    classes,
+    image,
+    handleSetImage,
+    handleRemoveFile,
+    fileNames,
+    filesByName,
+}) => (
+    <Box>
+        {fileNames.filter(fileName => {
+            const {name, url} = filesByName[fileName] || {};
+            return name && url;
+        }).map((fileName, index) => {
+            const {name, url} = filesByName[fileName];
+            return (
+                <SortableItem
+                    key={name}
+                    classes={classes}
+                    name={name}
+                    url={url}
+                    image={image}
+                    handleSetImage={handleSetImage}
+                    handleRemoveFile={handleRemoveFile}
+                    index={index}
+                    idx={index}
+                />
+            );
+        })}
+    </Box>
+));
 
 const NewCategory = props => {
     const [category, setCategory] = useState(props.category || {});
@@ -104,13 +176,14 @@ const NewCategory = props => {
                 data.append(`images_${i}`, file);
             }
         });
+        data.append('fileNames', JSON.stringify(fileNames));
 
         if (isEditMode) {
             data.append('imagesToRemove', JSON.stringify(imagesToRemove));
         }
 
         try {
-            const result = await axios(isEditMode ? `/admin/categories/${category.id}` : `/admin/categories/add`, {
+            const response = await axios(isEditMode ? `/admin/categories/${category.id}` : `/admin/categories/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -119,7 +192,7 @@ const NewCategory = props => {
             });
 
             if (isEditMode) {
-                setCategory(result.data.category);
+                setCategory(response.data.category);
                 setOpen(true);
                 setMessage('Kategoria zmieniona');
                 setVariant('success');
@@ -156,6 +229,15 @@ const NewCategory = props => {
         if (isEditMode && (category.images || []).find(i => i.name === name)) {
             setImagesToRemove([...imagesToRemove, name]);
         }
+    };
+    const onSortEnd = sort => {
+        const {oldIndex, newIndex} = sort;
+        if (oldIndex === newIndex) {
+            return;
+        }
+        const newFileNames = arrayMove(fileNames, oldIndex, newIndex);
+        targetFileNames = [...newFileNames];
+        setFileNames(newFileNames);
     };
 
     return (
@@ -200,35 +282,19 @@ const NewCategory = props => {
                         shrink: true,
                     }}
                 />
-                {fileNames.length > 0 && fileNames.map(fileName => {
-                    const {name, url} = filesByName[fileName] || {};
-                    if (!name || !url) {
-                        return;
-                    }
-                    return (
-                        <Card className={classes.card} key={name}>
-                            <CardMedia
-                                className={classes.media}
-                                image={url}
-                            />
-                            <CardActions disableSpacing>
-                                <IconButton
-                                    aria-label="Dodaj jako główne"
-                                    onClick={handleSetImage(name)}
-                                    disabled={name === image}
-                                >
-                                    <FavoriteIcon color={name === image ? `primary` : `disabled`}/>
-                                </IconButton>
-                                <IconButton
-                                    aria-label="Usuń zdjęcie"
-                                    onClick={handleRemoveFile(name)}
-                                >
-                                    <DeleteIcon color="secondary" />
-                                </IconButton>
-                            </CardActions>
-                        </Card>
-                    )
-                })}
+                {fileNames.length > 0 && (
+                    <SortableListContainer
+                        classes={classes}
+                        image={image}
+                        handleSetImage={handleSetImage}
+                        handleRemoveFile={handleRemoveFile}
+                        fileNames={fileNames}
+                        filesByName={filesByName}
+                        useDragHandle={true}
+                        lockAxis="y"
+                        onSortEnd={onSortEnd}
+                    />
+                )}
                 <Button
                     component="label"
                     variant="contained"
@@ -254,7 +320,7 @@ const NewCategory = props => {
                         onClick={handleCreateCategory}
                     >{`${props.category ? 'Edytuj' : 'Utwórz'} kategorię oferty`}</Button>
                 </Box>
-                <MessageBar open={open} message={message} variant={variant} handleClose={handleClose} />
+                <MessageBar open={open} message={message} variant={variant} handleClose={handleClose}/>
             </Container>
         </Fragment>
     );

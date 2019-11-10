@@ -169,6 +169,17 @@ class CategoryController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $mainCategoryImageName = '';
         $succeeded = [];
+        $fileNames = json_decode($request->request->get('fileNames'));
+        $fileRepo = $this->getDoctrine()->getRepository(Image::class);
+        foreach ($fileNames as $key => $fileName) {
+            $existingImage = $fileRepo->findOneBy(['name' => $fileName, 'Category' => $category->getId()]);
+            if (!$existingImage) {
+                continue;
+            }
+            $existingImage->setSort($key + 1);
+            $entityManager->persist($existingImage);
+        }
+
         foreach ($uploadedFiles as $uploadedFile) {
             $clientOriginalName = $uploadedFile->getClientOriginalName();
             $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
@@ -192,8 +203,13 @@ class CategoryController extends AbstractController
             if (!isset($failedUploads[$clientOriginalName])) {
                 $image = new Image();
                 $image->setName("/images/offer/{$newFilename}");
-                $image->setSort($imagesSort++);
-
+                $fileNameIndex = array_search($clientOriginalName, $fileNames);
+                if ($fileNameIndex === false) {
+                    $image->setSort($imagesSort);
+                } else {
+                    $image->setSort($fileNameIndex + 1);
+                }
+                $imagesSort++;
                 $errors = $validator->validate($image);
                 if (count($errors) > 0) {
                     return $this->json(['errors' => $errors], 400);
@@ -248,7 +264,7 @@ class CategoryController extends AbstractController
                         'name' => $image->getName(),
                         'sort' => $image->getSort(),
                     ];
-                }, $category->getImages()->toArray())),
+                }, $imageRepo->getAllSortedFromCategory($category))),
             ],
         ]);
     }
