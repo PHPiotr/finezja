@@ -2,11 +2,33 @@
     <div id="swiper-slider" class="swiper-container swiper-slider swiper-container-horizontal"
          data-min-height="546px" data-height="25%" data-autoplay="6000" data-loop="true"
          data-slide-effect="slide" style="height: 546px;">
-        <div class="swiper-wrapper" style="transform: translate3d(-2433px, 0px, 0px); transition-duration: 0ms;">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"
+                 data-slide-bg="{{ absolute_url('/images/slider/oferta.jpg') }}"
+                 data-swiper-slide-index="0"
+                 style="background-image: url({{ absolute_url('/images/slider/oferta.jpg') }}); background-size: cover; width: 811px;">
+                <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
+                     data-caption-delay="200">
+                    <div class="camera_caption">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h1 class="slide-title heading-style-1 visible-first">
+                                        <a title="Oferta pełna finezji"
+                                           href="{{ path('offers') }}">
+                                            Oferta pełna finezji
+                                        </a>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% for idx, category in categories %}
                 <div class="swiper-slide"
                      data-slide-bg="{{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}"
-                     data-swiper-slide-index="{{ idx }}"
+                     data-swiper-slide-index="{{ idx + 1 }}"
                      style="background-image: url({{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}); background-size: cover; width: 811px;">
                     <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
                          data-caption-delay="200">
