@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import MessageBar from './MessageBar';
+import ProgressIndicator from './ProgressIndicator';
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -114,6 +115,7 @@ const NewCategory = props => {
     const [longDescription, setLongDescription] = useState(category.longDescription || '');
     const [image, setImage] = useState(category.image || '');
     const [imagesToRemove, setImagesToRemove] = useState([]);
+    const [isProgress, setIsProgress] = useState(false);
 
     // snackbar state
     const [message, setMessage] = useState('');
@@ -164,6 +166,7 @@ const NewCategory = props => {
     const handleShortDescriptionInputChange = e => setShortDescription(e.target.value);
     const handleLongDescriptionInputChange = e => setLongDescription(e.target.value);
     const handleCreateCategory = async () => {
+        setIsProgress(true);
         const data = new FormData();
         data.append('name', categoryName);
         data.append('image', image);
@@ -216,6 +219,8 @@ const NewCategory = props => {
             setOpen(true);
             setMessage(e.message);
             setVariant('error');
+        } finally {
+            setIsProgress(false);
         }
     };
     const handleRemoveFile = name => () => {
@@ -322,6 +327,7 @@ const NewCategory = props => {
                 </Box>
                 <MessageBar open={open} message={message} variant={variant} handleClose={handleClose}/>
             </Container>
+            {isProgress && <ProgressIndicator />}
         </Fragment>
     );
 };

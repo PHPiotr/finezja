@@ -13,6 +13,7 @@ import arrayMove from 'array-move';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import FloatingAddButton from './FloatingAddButton';
 import ConfirmationDialog from './ConfirmationDialog';
+import ProgressIndicator from './ProgressIndicator';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -66,8 +67,10 @@ const Categories = props => {
     const [deleteCategoryDialogDescription, setDeleteCategoryDialogDescription] = useState('');
     const [deleteCategory, setDeleteCategory] = useState(null);
     const [deleteCategoryIndex, setDeleteCategoryIndex] = useState(null);
+    const [isProgress, setIsProgress] = useState(false);
 
     const onSortEnd = async (sort) => {
+        setIsProgress(true);
         const {oldIndex, newIndex} = sort;
         if (oldIndex === newIndex) {
             return;
@@ -87,6 +90,8 @@ const Categories = props => {
         } catch (e) {
             const revertedItems = arrayMove(items, newIndex, oldIndex);
             setItems(revertedItems);
+        } finally {
+            setIsProgress(false);
         }
     };
 
@@ -98,6 +103,7 @@ const Categories = props => {
     };
 
     const handleDeleteCategoryConfirm = async () => {
+        setIsProgress(true);
         setDeleteCategoryDialogOpen(false);
         setDeleteCategoryDialogDescription('');
         const newItems = items.filter(i => i.id !== deleteCategory.id);
@@ -114,6 +120,7 @@ const Categories = props => {
         } finally {
             setDeleteCategory(null);
             setDeleteCategoryIndex(null);
+            setIsProgress(false);
         }
     };
     const handleDeleteCategoryCancel = () => {
@@ -139,6 +146,7 @@ const Categories = props => {
                 onCancel={handleDeleteCategoryCancel}
                 onClose={handleDeleteCategoryCancel}
             />
+            {isProgress && <ProgressIndicator />}
         </Fragment>
     );
 };
