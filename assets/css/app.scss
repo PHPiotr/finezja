@@ -32,11 +32,16 @@ $secondary: #A8165B;
   color: $primary;
 }
 
+#swiper-slider .slide-title.short-description a,
 #error a {
   color: $primary;
   text-decoration: none;
   font: 16px/30px 'Merriweather', serif;
   text-transform: uppercase;
+}
+#swiper-slider .slide-title a,
+#swiper-slider .slide-title.short-description a {
+  color: #fff;
 }
 
 @media(max-width: 575px) {

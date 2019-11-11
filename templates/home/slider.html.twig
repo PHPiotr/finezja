@@ -1,84 +1,40 @@
 <div id="header">
     <div id="swiper-slider" class="swiper-container swiper-slider swiper-container-horizontal"
-         data-min-height="546px" data-height="25%" data-autoplay="false" data-loop="true"
+         data-min-height="546px" data-height="25%" data-autoplay="6000" data-loop="true"
          data-slide-effect="slide" style="height: 546px;">
         <div class="swiper-wrapper" style="transform: translate3d(-2433px, 0px, 0px); transition-duration: 0ms;">
-            <div class="swiper-slide swiper-slide-active"
-                 data-slide-bg="{{ absolute_url('/images/slider/slide-5.jpg') }}"
-                 data-swiper-slide-index="0"
-                 style="background-image: url({{ absolute_url('/images/slider/slide-5.jpg') }}); background-size: cover; width: 811px;">
-                <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
-                     data-caption-delay="200">
-                    <div class="camera_caption">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h1 class="slide-title heading-style-1 visible-first">
-                                        Tuż tuż...
-                                    </h1>
+            {% for idx, category in categories %}
+                <div class="swiper-slide"
+                     data-slide-bg="{{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}"
+                     data-swiper-slide-index="{{ idx }}"
+                     style="background-image: url({{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}); background-size: cover; width: 811px;">
+                    <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
+                         data-caption-delay="200">
+                        <div class="camera_caption">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h1 class="slide-title heading-style-1 visible-first">
+                                            <a title="{{ category.name }}" rel="nofollow"
+                                               href="{{ path('offer', { 'slug': category.slug }) }}">
+                                                {{ category.name }}
+                                            </a>
+                                        </h1>
+                                        {% if category.shortDescription %}
+                                            <p class="short-description slide-title heading-style-1 visible-first">
+                                                <a title="{{ category.name }}" rel="nofollow"
+                                                   href="{{ path('offer', { 'slug': category.slug }) }}">
+                                                    {{ category.shortDescription }}
+                                                </a>
+                                            </p>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="swiper-slide swiper-slide-next"
-                 data-slide-bg="{{ absolute_url('/images/slider/slide-4.jpg') }}"
-                 data-swiper-slide-index="1"
-                 style="background-image: url({{ absolute_url('/images/slider/slide-4.jpg') }}); background-size: cover; width: 811px;">
-                <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
-                     data-caption-delay="200">
-                    <div class="camera_caption">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h1 class="slide-title heading-style-1 visible-first">
-                                        Wyjątkowo piękne...
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide swiper-slide-next"
-                 data-slide-bg="{{ absolute_url('/images/slider/slide-3.jpg') }}"
-                 data-swiper-slide-index="2"
-                 style="background-image: url({{ absolute_url('/images/slider/slide-3.jpg') }}); background-size: cover; width: 811px;">
-                <div class="swiper-slide-caption not-animated" data-caption-animate="fadeIn"
-                     data-caption-delay="200">
-                    <div class="camera_caption ">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h1 class="slide-title heading-style-1 visible-first">
-                                        Na każdą okazję...
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide"
-                 data-slide-bg="{{ absolute_url('/images/slider/slide-1.jpg') }}"
-                 data-swiper-slide-index="3"
-                 style="background-image: url({{ absolute_url('/images/slider/slide-1.jpg') }}); background-size: cover; width: 811px;">
-                <div class="swiper-slide-caption not-animated" data-caption-animate="fadeIn"
-                     data-caption-delay="200">
-                    <div class="camera_caption ">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h1 class="slide-title heading-style-1 visible-first">
-                                        Finezja...
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>

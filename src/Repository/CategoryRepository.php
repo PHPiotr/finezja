@@ -61,4 +61,14 @@ class CategoryRepository extends ServiceEntityRepository
 
         return $stmt->fetchColumn();
     }
+
+    public function getForSlider()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.sort', 'ASC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

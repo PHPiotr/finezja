@@ -161,7 +161,7 @@ jQuery(document).ready(function ($) {
     }
 
     setOffset();
-    $(window).bind("resize scroll", $.throttle(50, setOffset));
+    $(window).bind("resize scroll", setOffset);
 
     function animateProgress(el) {
         if (el.find('.radial-progress').length != 0 && el.find('.radial-progress').hasClass('draw')) {
