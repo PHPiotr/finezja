@@ -9,7 +9,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        const category = '{{ category|raw }}';
+        const categoryId = parseInt('{{ categoryId }}', 10);
     </script>
     {{ encore_entry_script_tags('adminCategoriesEdit') }}
 {% endblock %}

@@ -9,5 +9,8 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        const categoryId = 0;
+    </script>
     {{ encore_entry_script_tags('adminCategoriesNew') }}
 {% endblock %}

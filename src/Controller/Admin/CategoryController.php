@@ -22,7 +22,7 @@ class CategoryController extends AbstractController
     /**
      * @Route("/admin/oferta", name="adminCategories")
      */
-    public function listAction()
+    public function renderListCategoriesView()
     {
         $repo = $this->getDoctrine()->getRepository(Category::class);
         $categories = $repo->findBy([], ['sort' => 'ASC']);
@@ -47,9 +47,33 @@ class CategoryController extends AbstractController
     /**
      * @Route("/admin/oferta/nowa-kategoria", name="newCategory")
      */
-    public function newAction()
+    public function renderNewCategoryView()
     {
         return $this->render('admin/categories/new.html.twig', []);
+    }
+
+    /**
+     * @Route("/admin/oferta/{id}", name="adminCategory")
+     * @param Category $category
+     * @return Response
+     */
+    public function renderEditCategoryView(Category $category)
+    {
+        return $this->render('admin/categories/edit.html.twig', [
+            'categoryId' => $category->getId(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/categories/{id}", methods={"GET"}, name="fetchCategory")
+     * @param Category $category
+     * @return JsonResponse
+     */
+    public function fetchCategoryAction(Category $category)
+    {
+        return $this->json([
+            'category' => $this->getParsedCategoryForResponse($category, $this->getDoctrine()->getRepository(Image::class)),
+        ]);
     }
 
     /**
@@ -58,7 +82,7 @@ class CategoryController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function addAction(ValidatorInterface $validator, Request $request)
+    public function addCategoryAction(ValidatorInterface $validator, Request $request)
     {
         $slugify = new Slugify();
 
@@ -80,6 +104,8 @@ class CategoryController extends AbstractController
         $mainCategoryImageName = '';
         $succeeded = [];
         $uploadDir = $this->getParameter('images_directory') . '/offer';
+        $imageDescriptions = $request->request->get('imageDescriptions') ?? [];
+        $index = 0;
         foreach ($uploadedFiles as $uploadedFile) {
             $clientOriginalName = $uploadedFile->getClientOriginalName();
             $originalFilename = pathinfo($clientOriginalName, PATHINFO_FILENAME);
@@ -100,8 +126,9 @@ class CategoryController extends AbstractController
             if (!isset($failedUploads[$clientOriginalName])) {
                 $image = new Image();
                 $image->setName("/images/offer/{$newFilename}");
+                $image->setDescription(empty($imageDescriptions[$index]) ? null : $imageDescriptions[$index]);
                 $image->setSort($imagesSort++);
-
+                $index++;
                 $errors = $validator->validate($image);
                 if (count($errors) > 0) {
                     $failedUploads[$clientOriginalName] = $errors;
@@ -123,24 +150,11 @@ class CategoryController extends AbstractController
         $entityManager->persist($category);
         $entityManager->flush();
 
+        $imageRepo = $this->getDoctrine()->getRepository(Image::class);
         return $this->json([
             'succeededUploads' => $succeeded,
             'failedUploads' => $failedUploads,
-            'category' => [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'shortDescription' => $category->getShortDescription(),
-                'longDescription' => $category->getLongDescription(),
-                'slug' => $category->getSlug(),
-                'sort' => $category->getSort(),
-                'image' => $category->getImage(),
-                'images' => array_values(array_map(function($image) {
-                    return [
-                        'name' => $image->getName(),
-                        'sort' => $image->getSort(),
-                    ];
-                }, $category->getImages()->toArray())),
-            ],
+            'category' => $this->getParsedCategoryForResponse($category, $imageRepo),
         ]);
     }
 
@@ -151,7 +165,7 @@ class CategoryController extends AbstractController
      * @param ValidatorInterface $validator
      * @return JsonResponse
      */
-    public function editAction(Category $category, Request $request, ValidatorInterface $validator)
+    public function editCategoryAction(Category $category, Request $request, ValidatorInterface $validator)
     {
         $slugify = new Slugify();
         $categoryImage = $request->request->get('image');
@@ -169,14 +183,18 @@ class CategoryController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $mainCategoryImageName = '';
         $succeeded = [];
-        $fileNames = json_decode($request->request->get('fileNames'));
+        $fileNames = $request->request->get('fileNames');
+        $imageDescriptions = $request->request->get('imageDescriptions') ?? [];
         $fileRepo = $this->getDoctrine()->getRepository(Image::class);
+        $uploadedImagesDescriptions = [];
         foreach ($fileNames as $key => $fileName) {
             $existingImage = $fileRepo->findOneBy(['name' => $fileName, 'Category' => $category->getId()]);
             if (!$existingImage) {
+                $uploadedImagesDescriptions[$fileName] = $imageDescriptions[$key] ?? null;
                 continue;
             }
             $existingImage->setSort($key + 1);
+            $existingImage->setDescription(empty($imageDescriptions[$key]) ? null : $imageDescriptions[$key]);
             $entityManager->persist($existingImage);
         }
 
@@ -203,6 +221,7 @@ class CategoryController extends AbstractController
             if (!isset($failedUploads[$clientOriginalName])) {
                 $image = new Image();
                 $image->setName("/images/offer/{$newFilename}");
+                $image->setDescription(empty($uploadedImagesDescriptions[$clientOriginalName]) ? null : $uploadedImagesDescriptions[$clientOriginalName]);
                 $fileNameIndex = array_search($clientOriginalName, $fileNames);
                 if ($fileNameIndex === false) {
                     $image->setSort($imagesSort);
@@ -230,7 +249,7 @@ class CategoryController extends AbstractController
         }
 
         $filesystem = new Filesystem();
-        $imagesToRemove = json_decode($request->request->get('imagesToRemove'));
+        $imagesToRemove = $request->request->get('imagesToRemove') ?? [];
         $imageRepo = $this->getDoctrine()->getRepository(Image::class);
         $publicDir = $this->getParameter('public_directory');
         foreach ($imagesToRemove as $name) {
@@ -251,46 +270,8 @@ class CategoryController extends AbstractController
         return $this->json([
             'succeededUploads' => $succeeded,
             'failedUploads' => $failedUploads,
-            'category' => [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'shortDescription' => $category->getShortDescription(),
-                'longDescription' => $category->getLongDescription(),
-                'slug' => $category->getSlug(),
-                'sort' => $category->getSort(),
-                'image' => $category->getImage(),
-                'images' => array_values(array_map(function($image) {
-                    return [
-                        'name' => $image->getName(),
-                        'sort' => $image->getSort(),
-                    ];
-                }, $imageRepo->getAllSortedFromCategory($category))),
-            ],
+            'category' => $this->getParsedCategoryForResponse($category, $imageRepo),
         ]);
-    }
-
-    /**
-     * @Route("/admin/oferta/{id}", name="adminCategory")
-     * @param Category $category
-     * @return Response
-     */
-    public function renderEditAction(Category $category)
-    {
-        return $this->render('admin/categories/edit.html.twig', ['category' => json_encode([
-            'id' => $category->getId(),
-            'name' => $category->getName(),
-            'slug' => $category->getSlug(),
-            'shortDescription' => $category->getShortDescription(),
-            'longDescription' => $category->getLongDescription(),
-            'image' => $category->getImage(),
-            'sort' => $category->getSort(),
-            'images' => array_values(array_map(function($image) {
-                return [
-                    'name' => $image->getName(),
-                    'sort' => $image->getSort(),
-                ];
-            }, $category->getImages()->toArray())),
-        ], JSON_UNESCAPED_UNICODE)]);
     }
 
     /**
@@ -299,7 +280,7 @@ class CategoryController extends AbstractController
      * @return JsonResponse
      * @throws JsonException
      */
-    public function sortAction(Request $request)
+    public function sortCategoriesAction(Request $request)
     {
         $jsonData = $request->getContent();
         $decodedData = json_decode($jsonData);
@@ -333,7 +314,7 @@ class CategoryController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function deleteCategory(Category $category)
+    public function deleteCategoryAction(Category $category)
     {
         $conn = $this->getDoctrine()->getConnection();
         $entityManager = $this->getDoctrine()->getManager();
@@ -363,5 +344,25 @@ class CategoryController extends AbstractController
             $conn->rollBack();
             throw $e;
         }
+    }
+
+    private function getParsedCategoryForResponse($category, $imageRepo): array
+    {
+        return [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'shortDescription' => $category->getShortDescription(),
+            'longDescription' => $category->getLongDescription(),
+            'slug' => $category->getSlug(),
+            'sort' => $category->getSort(),
+            'image' => $category->getImage(),
+            'images' => array_values(array_map(function($image) {
+                return [
+                    'name' => $image->getName(),
+                    'description' => $image->getDescription(),
+                    'sort' => $image->getSort(),
+                ];
+            }, $imageRepo->getAllSortedFromCategory($category))),
+        ];
     }
 }

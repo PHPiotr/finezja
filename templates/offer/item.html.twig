@@ -1,15 +1,15 @@
 {% set asset_img = asset(img.name) %}
 <div class="jg_element_cat gallery-grid gallery-item col-sm-12">
     <a class="fancybox-thumb"
-       data-title="{{ asset_img }}"
-       title="{{ asset_img }}"
+       data-title="{{ img.description ? img.description : asset_img }}"
+       title="{{ img.description ? img.description : asset_img }}"
        href="{{ asset_img }}"
        data-fancybox="fancybox"
        data-fancybox-group="{{ slug }}"
        data-fancybox-type="image"
     >
         <div class="jg_imgalign_catimgs">
-            <img src="{{ asset_img }}" class="jg_photo_custom" alt="{{ asset_img }}">
+            <img src="{{ asset_img }}" class="jg_photo_custom" alt="{{ img.description ? img.description : asset_img }}">
             <div class="jg_catelem_txt">
                 <ul>
                     <li class="jg_links"><i class="fa fa-search-plus"></i></li>
@@ -17,4 +17,7 @@
             </div>
         </div>
     </a>
+    {% if img.description %}
+        <span>{{ img.description }}</span>
+    {% endif %}
 </div>

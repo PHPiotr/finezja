@@ -48,7 +48,9 @@ const SortableItem = SortableElement(({
     name,
     url,
     image,
+    imageDescriptions,
     handleSetImage,
+    handleSetImageDescriptions,
     handleRemoveFile,
 }) => (
     <Card className={classes.card}>
@@ -71,6 +73,17 @@ const SortableItem = SortableElement(({
             >
                 <DeleteIcon color="secondary"/>
             </IconButton>
+            <TextField
+                style={{margin: 8}}
+                placeholder="Opis"
+                margin="normal"
+                defaultValue={imageDescriptions[name]}
+                fullWidth
+                onChange={handleSetImageDescriptions(name)}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />
         </CardActions>
     </Card>
 ));
@@ -78,7 +91,9 @@ const SortableItem = SortableElement(({
 const SortableListContainer = SortableContainer(({
     classes,
     image,
+    imageDescriptions,
     handleSetImage,
+    handleSetImageDescriptions,
     handleRemoveFile,
     fileNames,
     filesByName,
@@ -96,7 +111,9 @@ const SortableListContainer = SortableContainer(({
                     name={name}
                     url={url}
                     image={image}
+                    imageDescriptions={imageDescriptions}
                     handleSetImage={handleSetImage}
+                    handleSetImageDescriptions={handleSetImageDescriptions}
                     handleRemoveFile={handleRemoveFile}
                     index={index}
                     idx={index}
@@ -107,15 +124,16 @@ const SortableListContainer = SortableContainer(({
 ));
 
 const NewCategory = props => {
-    const [category, setCategory] = useState(props.category || {});
-    const isEditMode = !!category.id;
+    const [category, setCategory] = useState({});
+    const [isEditMode, setIsEditMode] = useState(!!props.categoryId);
     const classes = useStyles();
-    const [categoryName, setCategoryName] = useState(category.name || '');
-    const [shortDescription, setShortDescription] = useState(category.shortDescription || '');
-    const [longDescription, setLongDescription] = useState(category.longDescription || '');
-    const [image, setImage] = useState(category.image || '');
+    const [categoryName, setCategoryName] = useState('');
+    const [shortDescription, setShortDescription] = useState('');
+    const [longDescription, setLongDescription] = useState('');
+    const [image, setImage] = useState('');
     const [imagesToRemove, setImagesToRemove] = useState([]);
     const [isProgress, setIsProgress] = useState(false);
+    const [imageDescriptions, setImageDescriptions] = useState({});
 
     // snackbar state
     const [message, setMessage] = useState('');
@@ -127,8 +145,34 @@ const NewCategory = props => {
     const [fileNames, setFileNames] = useState([]);
     const [filesByName, setFilesByName] = useState({});
 
+    useEffect(async () => {
+        if (!isEditMode) {
+            return;
+        }
+        try {
+            setIsProgress(true);
+            const response = await axios(`/admin/categories/${categoryId}`);
+            if (response.data && response.data.category) {
+                setCategory(response.data.category);
+                setCategoryName(response.data.category.name);
+                setShortDescription(response.data.category.shortDescription);
+                setLongDescription(response.data.category.longDescription);
+                setImage(response.data.category.image);
+            }
+        } catch(e) {
+            setMessage(e.message || 'Something went wrong...');
+            setVariant(error);
+            setOpen(true);
+        } finally {
+            setIsProgress(false);
+        }
+    }, [categoryId]);
+
     useEffect(() => {
         if (!isEditMode) {
+            return;
+        }
+        if (!category) {
             return;
         }
         targetFileNames = (category.images || []).map(i => i.name);
@@ -140,6 +184,11 @@ const NewCategory = props => {
             };
             return acc;
         }, {});
+        const newImageDescriptions = (category.images || []).reduce((acc, curr) => {
+            acc[curr.name] = curr.description;
+            return acc;
+        }, {});
+        setImageDescriptions(newImageDescriptions);
         setFileNames(targetFileNames);
         setFilesByName(targetFilesByName);
     }, [category]);
@@ -162,6 +211,7 @@ const NewCategory = props => {
         });
     };
     const handleSetImage = name => () => setImage(name);
+    const handleSetImageDescriptions = name => e => setImageDescriptions({...imageDescriptions, [name]: e.target.value});
     const handleCategoryNameInputChange = e => setCategoryName(e.target.value);
     const handleShortDescriptionInputChange = e => setShortDescription(e.target.value);
     const handleLongDescriptionInputChange = e => setLongDescription(e.target.value);
@@ -174,15 +224,18 @@ const NewCategory = props => {
         data.append('longDescription', longDescription);
 
         fileNames.forEach((fileName, i) => {
+            data.append(`imageDescriptions[]`, imageDescriptions[fileName] || '');
+            data.append(`fileNames[]`, fileName);
             const {file} = filesByName[fileName];
             if (file) {
                 data.append(`images_${i}`, file);
             }
         });
-        data.append('fileNames', JSON.stringify(fileNames));
 
         if (isEditMode) {
-            data.append('imagesToRemove', JSON.stringify(imagesToRemove));
+            imagesToRemove.forEach(imageToRemove => {
+                data.append('imagesToRemove[]', imageToRemove);
+            });
         }
 
         try {
@@ -291,7 +344,9 @@ const NewCategory = props => {
                     <SortableListContainer
                         classes={classes}
                         image={image}
+                        imageDescriptions={imageDescriptions}
                         handleSetImage={handleSetImage}
+                        handleSetImageDescriptions={handleSetImageDescriptions}
                         handleRemoveFile={handleRemoveFile}
                         fileNames={fileNames}
                         filesByName={filesByName}
@@ -323,7 +378,7 @@ const NewCategory = props => {
                         className={classes.button}
                         disabled={!categoryName || fileNames.length === 0 || !image}
                         onClick={handleCreateCategory}
-                    >{`${props.category ? 'Edytuj' : 'Utwórz'} kategorię oferty`}</Button>
+                    >{`${isEditMode ? 'Edytuj' : 'Utwórz'} kategorię oferty`}</Button>
                 </Box>
                 <MessageBar open={open} message={message} variant={variant} handleClose={handleClose}/>
             </Container>
