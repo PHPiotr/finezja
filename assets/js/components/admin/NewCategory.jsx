@@ -75,6 +75,7 @@ const SortableItem = SortableElement(({
             </IconButton>
             <TextField
                 style={{margin: 8}}
+                multiline
                 placeholder="Opis"
                 margin="normal"
                 defaultValue={imageDescriptions[name]}
