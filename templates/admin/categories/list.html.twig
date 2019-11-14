@@ -5,8 +5,5 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        const categories = '{{ categoriesJson|raw }}';
-    </script>
     {{ encore_entry_script_tags('adminCategories') }}
 {% endblock %}

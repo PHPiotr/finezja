@@ -24,24 +24,7 @@ class CategoryController extends AbstractController
      */
     public function renderListCategoriesView()
     {
-        $repo = $this->getDoctrine()->getRepository(Category::class);
-        $categories = $repo->findBy([], ['sort' => 'ASC']);
-
-        $data = [];
-        foreach ($categories as $category) {
-            $data[] = [
-                'id' => $category->getId(),
-                'slug' => $category->getSlug(),
-                'name' => $category->getName(),
-                'sort' => $category->getSort(),
-                'image' => $category->getImage(),
-            ];
-        }
-
-        return $this->render('admin/categories/list.html.twig', [
-            'categories' => $data,
-            'categoriesJson' => json_encode($data, JSON_UNESCAPED_UNICODE),
-        ]);
+        return $this->render('admin/categories/list.html.twig');
     }
 
     /**
@@ -73,6 +56,32 @@ class CategoryController extends AbstractController
     {
         return $this->json([
             'category' => $this->getParsedCategoryForResponse($category, $this->getDoctrine()->getRepository(Image::class)),
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/categories", methods={"GET"}, name="fetchCategories")
+     * @return JsonResponse
+     */
+    public function fetchCategoriesAction()
+    {
+        $repo = $this->getDoctrine()->getRepository(Category::class);
+        $categories = $repo->findBy([], ['sort' => 'ASC']);
+
+        $data = [];
+        foreach ($categories as $category) {
+            $data[] = [
+                'id' => $category->getId(),
+                'slug' => $category->getSlug(),
+                'name' => $category->getName(),
+                'sort' => $category->getSort(),
+                'image' => $category->getImage(),
+            ];
+        }
+
+        return $this->json([
+            'categories' => $data,
         ]);
     }
 

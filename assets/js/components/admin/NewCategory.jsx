@@ -145,27 +145,29 @@ const NewCategory = props => {
     const [fileNames, setFileNames] = useState([]);
     const [filesByName, setFilesByName] = useState({});
 
-    useEffect(async () => {
-        if (!isEditMode) {
-            return;
-        }
-        try {
-            setIsProgress(true);
-            const response = await axios(`/admin/categories/${categoryId}`);
-            if (response.data && response.data.category) {
-                setCategory(response.data.category);
-                setCategoryName(response.data.category.name);
-                setShortDescription(response.data.category.shortDescription);
-                setLongDescription(response.data.category.longDescription);
-                setImage(response.data.category.image);
+    useEffect(() => {
+        (async () => {
+            if (!isEditMode) {
+                return;
             }
-        } catch(e) {
-            setMessage(e.message || 'Something went wrong...');
-            setVariant(error);
-            setOpen(true);
-        } finally {
-            setIsProgress(false);
-        }
+            try {
+                setIsProgress(true);
+                const response = await axios(`/admin/categories/${categoryId}`);
+                if (response.data && response.data.category) {
+                    setCategory(response.data.category);
+                    setCategoryName(response.data.category.name);
+                    setShortDescription(response.data.category.shortDescription);
+                    setLongDescription(response.data.category.longDescription);
+                    setImage(response.data.category.image);
+                }
+            } catch(e) {
+                setMessage(e.message || 'Something went wrong...');
+                setVariant(error);
+                setOpen(true);
+            } finally {
+                setIsProgress(false);
+            }
+        })();
     }, [categoryId]);
 
     useEffect(() => {
