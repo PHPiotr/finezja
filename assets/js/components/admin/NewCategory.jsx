@@ -223,8 +223,8 @@ const NewCategory = props => {
         const data = new FormData();
         data.append('name', categoryName);
         data.append('image', image);
-        data.append('shortDescription', shortDescription);
-        data.append('longDescription', longDescription);
+        data.append('shortDescription', shortDescription || '');
+        data.append('longDescription', longDescription || '');
 
         fileNames.forEach((fileName, i) => {
             data.append(`imageDescriptions[]`, imageDescriptions[fileName] || '');
