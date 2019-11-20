@@ -6,6 +6,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import DeleteIcon from "@material-ui/icons/Delete";
+import SliderIcon from "@material-ui/icons/PhotoCamera";
 import axios from 'axios';
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -14,6 +15,7 @@ import FloatingAddButton from './FloatingAddButton';
 import ConfirmationDialog from './ConfirmationDialog';
 import MessageBar from './MessageBar';
 import ProgressIndicator from './ProgressIndicator';
+import SliderDialog from './SliderDialog';
 
 const DragHandle = SortableHandle(() => (
     <ListItemIcon>
@@ -21,7 +23,7 @@ const DragHandle = SortableHandle(() => (
     </ListItemIcon>
 ));
 
-const SortableItem = SortableElement(({id, idx, text, image, onDeleteClick}) => {
+const SortableItem = SortableElement(({id, idx, text, image, slide, onDeleteClick, onSliderClick}) => {
     return (
         <ListItem button component="a" href={`/admin/oferta/${id}`}>
             <DragHandle/>
@@ -31,6 +33,12 @@ const SortableItem = SortableElement(({id, idx, text, image, onDeleteClick}) => 
             }}>
                 <DeleteIcon/>
             </ListItemIcon>
+            <ListItemIcon onClick={e => {
+                e.preventDefault();
+                onSliderClick({id, idx, text, slide});
+            }}>
+                <SliderIcon/>
+            </ListItemIcon>
             <ListItemAvatar>
                 <Avatar alt={text} src={image}/>
             </ListItemAvatar>
@@ -39,10 +47,20 @@ const SortableItem = SortableElement(({id, idx, text, image, onDeleteClick}) => 
     )
 });
 
-const SortableListContainer = SortableContainer(({items, onDeleteClick}) => (
+const SortableListContainer = SortableContainer(({items, onDeleteClick, onSliderClick}) => (
     <List component="div">
-        {items.map(({id, name, image}, index) => (
-            <SortableItem key={id} index={index} idx={index} text={name} image={image} id={id} onDeleteClick={onDeleteClick}/>
+        {items.map(({id, name, image, slide}, index) => (
+            <SortableItem
+                key={id}
+                index={index}
+                idx={index}
+                text={name}
+                image={image}
+                id={id}
+                onDeleteClick={onDeleteClick}
+                onSliderClick={onSliderClick}
+                slide={slide || ''}
+            />
         ))}
     </List>
 ));
@@ -50,6 +68,11 @@ const SortableListContainer = SortableContainer(({items, onDeleteClick}) => (
 const Categories = props => {
     const [items, setItems] = useState([]);
     const [deleteCategoryDialogOpen, setDeleteCategoryDialogOpen] = useState(false);
+    const [sliderDialogOpen, setSliderDialogOpen] = useState(false);
+    const [slideId, setSlideId] = useState(null);
+    const [slide, setSlide] = useState('');
+    const [sliderDialogTitle, setSliderDialogTitle] = useState('');
+    const [slideUrl, setSlideUrl] = useState('');
     const [deleteCategoryDialogDescription, setDeleteCategoryDialogDescription] = useState('');
     const [deleteCategory, setDeleteCategory] = useState(null);
     const [deleteCategoryIndex, setDeleteCategoryIndex] = useState(null);
@@ -114,6 +137,13 @@ const Categories = props => {
         setDeleteCategoryIndex(idx);
     };
 
+    const handleOnSliderClick = ({id, idx, text, slide}) => {
+        setSliderDialogTitle(text);
+        setSliderDialogOpen(true);
+        setSlideId(id);
+        setSlide(slide);
+    };
+
     const handleDeleteCategoryConfirm = async () => {
         setIsProgress(true);
         setDeleteCategoryDialogOpen(false);
@@ -143,11 +173,51 @@ const Categories = props => {
         setDeleteCategoryDialogDescription('')
     };
 
+    const handleCloseSliderDialog = () => {
+        setSliderDialogOpen(false);
+        setSliderDialogTitle('');
+    };
+
+    const handleChangeSlider = async e => {
+        const oldSlide = slide;
+        setIsProgress(true);
+        setSlide('');
+        const data = new FormData();
+        const newSlide = Array.from(e.target.files)[0];
+        data.append(`slide`, newSlide);
+        try {
+            const response = await axios(`/admin/categories/${slideId}/slider`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                data,
+            });
+            if (response.data.slide) {
+                setSlide(response.data.slide);
+                setItems(items.map(i => {
+                    if (i.id === slideId) {
+                        return {...i, slide: response.data.slide}
+                    }
+                    return i;
+                }))
+            }
+        } catch(e) {
+            setSlide(oldSlide);
+            setOpen(true);
+            setVariant('error');
+            setMessage(e.message);
+        } finally {
+            setIsProgress(false);
+        }
+    };
+
     return (
         <Fragment>
             <SortableListContainer
                 items={items}
                 onDeleteClick={handleOnDeleteCategoryClick}
+                onSliderClick={handleOnSliderClick}
                 onSortEnd={onSortEnd}
                 useDragHandle={true}
                 lockAxis="y"
@@ -160,6 +230,15 @@ const Categories = props => {
                 onConfirm={handleDeleteCategoryConfirm}
                 onCancel={handleDeleteCategoryCancel}
                 onClose={handleDeleteCategoryCancel}
+            />
+            <SliderDialog
+                open={sliderDialogOpen}
+                onClose={handleCloseSliderDialog}
+                title={sliderDialogTitle}
+                url={slideUrl}
+                onChange={handleChangeSlider}
+                slide={slide}
+                isProgress={isProgress}
             />
             <MessageBar open={open} message={message} variant={variant} handleClose={handleClose}/>
             {isProgress && <ProgressIndicator />}

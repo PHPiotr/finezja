@@ -27,9 +27,9 @@
             </div>
             {% for idx, category in categories %}
                 <div class="swiper-slide"
-                     data-slide-bg="{{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}"
+                     data-slide-bg="{{ absolute_url(slides[category.id]) }}"
                      data-swiper-slide-index="{{ idx + 1 }}"
-                     style="background-image: url({{ absolute_url('/images/slider/slide-' ~ category.id ~ '.jpg') }}); background-size: cover; width: 811px;">
+                     style="background-image: url({{ absolute_url(slides[category.id]) }}); background-size: cover; width: 811px;">
                     <div class="swiper-slide-caption fadeIn animated" data-caption-animate="fadeIn"
                          data-caption-delay="200">
                         <div class="camera_caption">

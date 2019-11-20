@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Category;
 use App\Entity\Image;
 use Cocur\Slugify\Slugify;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -68,20 +69,49 @@ class CategoryController extends AbstractController
     {
         $repo = $this->getDoctrine()->getRepository(Category::class);
         $categories = $repo->findBy([], ['sort' => 'ASC']);
+        $filesystem = new Filesystem();
+        $publicDir = $this->getParameter('public_directory');
 
         $data = [];
         foreach ($categories as $category) {
+            $slide = "/images/slider/slide-{$category->getId()}.jpg";
             $data[] = [
                 'id' => $category->getId(),
                 'slug' => $category->getSlug(),
                 'name' => $category->getName(),
                 'sort' => $category->getSort(),
                 'image' => $category->getImage(),
+                'slide' => $filesystem->exists("{$publicDir}/{$slide}") ? $slide : null,
             ];
         }
 
         return $this->json([
             'categories' => $data,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/categories/{id}/slider", methods={"POST"}, name="addCategorySlide")
+     * @param Category $category
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function sliderAction(Category $category, Request $request)
+    {
+        $uploadedFiles = $request->files->all();
+        if (!isset($uploadedFiles['slide'])) {
+            throw new Exception('Missing slide');
+        }
+        $uploadedFile = $uploadedFiles['slide'];
+        $clientOriginalName = $uploadedFile->getClientOriginalName();
+        $originalExtension = pathinfo($clientOriginalName, PATHINFO_EXTENSION);
+        $newFilename = sprintf('slide-%d.%s', $category->getId(), $originalExtension);
+        $uploadDir = $this->getParameter('images_directory') . '/slider';
+        $uploadedFile->move($uploadDir, $newFilename);
+
+        return $this->json([
+            'slide' => "/images/slider/{$newFilename}",
         ]);
     }
 
@@ -321,7 +351,7 @@ class CategoryController extends AbstractController
      * @Route("/admin/categories/{id}", methods={"DELETE"}, name="adminDeleteCategory")
      * @param Category $category
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function deleteCategoryAction(Category $category)
     {
@@ -349,7 +379,7 @@ class CategoryController extends AbstractController
             $response = new Response();
             $response->setStatusCode(204);
             return $response;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $conn->rollBack();
             throw $e;
         }
