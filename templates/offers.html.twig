@@ -1,49 +1,39 @@
-{% extends('base.html.twig') %}
-
-{% block title %}{{ metaTitle }}{{ parent() }}{% endblock %}
-{% block description %}{{ metaDescription }} {{ parent() }}{% endblock %}
-{% block keywords %}{{ metaKeywords|trim }}{{ parent() }}{% endblock %}
-
-{% block body %}
-    <div id="content">
-        <div class="container">
-            <div class="row">
-                <div class="content-inner">
-                    <div id="component" class="col-sm-12">
-                        <main>
-                            <section class="page-gallery page-gallery__works">
-                                <header class="page_header">
-                                    <h3 class="heading-style-3 visible-first">Oferta</h3>
-                                    <h4>Zapraszamy do skorzystania z naszej bogatej oferty.</h4>
-                                </header>
-                                <div class="row cols-3">
-                                    <div class="col-sm-4 one-column-layout">
-                                        {% for item in items %}
-                                            {% include 'offers/item.html.twig' with {'item': item} %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="col-sm-4 three-columns-layout">
-                                        {% for item in items_left %}
-                                            {% include 'offers/item.html.twig' with {'item': item} %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="col-sm-4 three-columns-layout">
-                                        {% for item in items_middle %}
-                                            {% include 'offers/item.html.twig' with {'item': item} %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="col-sm-4 three-columns-layout">
-                                        {% for item in items_right %}
-                                            {% include 'offers/item.html.twig' with {'item': item} %}
-                                        {% endfor %}
-                                    </div>
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="content-inner">
+                <div id="component" class="col-sm-12">
+                    <main>
+                        <section class="page-gallery page-gallery__works">
+                            <header class="page_header">
+                                <h4>Zapraszamy do skorzystania z naszej bogatej oferty.</h4>
+                            </header>
+                            <div class="row cols-3">
+                                <div class="col-sm-4 one-column-layout">
+                                    {% for item in items %}
+                                        {% include 'offers/item.html.twig' with {'item': item} %}
+                                    {% endfor %}
                                 </div>
-                            </section>
-                        </main>
-                    </div>
+                                <div class="col-sm-4 three-columns-layout">
+                                    {% for item in items_left %}
+                                        {% include 'offers/item.html.twig' with {'item': item} %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-sm-4 three-columns-layout">
+                                    {% for item in items_middle %}
+                                        {% include 'offers/item.html.twig' with {'item': item} %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-sm-4 three-columns-layout">
+                                    {% for item in items_right %}
+                                        {% include 'offers/item.html.twig' with {'item': item} %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+                    </main>
                 </div>
             </div>
         </div>
     </div>
-
-{% endblock %}
+</div>

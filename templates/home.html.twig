@@ -6,12 +6,8 @@
 
 {% block body %}
     {% include('home/slider.html.twig') %}
-    {% include('home/feature.html.twig') %}
-    {% include('home/content.html.twig') %}
-    {% include('home/mainbottom1.html.twig') %}
-    {% include('home/mainbottom5.html.twig') %}
+    {% include('offers.html.twig') %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-{#    {{ encore_entry_script_tags('home') }}#}
 {% endblock %}

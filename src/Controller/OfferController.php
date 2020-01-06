@@ -50,49 +50,6 @@ class OfferController extends AbstractController
 
     public function indexAction()
     {
-        $metaDescription = '';
-        $metaKeywords = '';
-        $index = 0;
-        $repo = $this->getDoctrine()->getRepository(Category::class);
-        $categories = $repo->findBy([], ['sort' => 'asc']);
-        foreach ($categories as $category) {
-            $lowerName = mb_strtolower($category->getName());
-            $metaKeywords .= $lowerName . ',';
-            if ($index++ > 2) {
-                continue;
-            }
-            $metaDescription .= $lowerName . ', ';
-        }
-        $metaDescription = rtrim($metaDescription, ', ');
-
-        $itemsLeft = $itemsMiddle = $itemsRight = [];
-        $itemsCount = count($categories);
-        $i = 0;
-        while($i < $itemsCount) {
-            $left = $i;
-            $middle = $i + 1;
-            $right = $i + 2;
-            if (isset($categories[$left])) {
-                $itemsLeft[] = $categories[$left];
-            }
-            if (isset($categories[$middle])) {
-                $itemsMiddle[] = $categories[$middle];
-            }
-            if (isset($categories[$right])) {
-                $itemsRight[] = $categories[$right];
-            }
-            $i += 3;
-        }
-
-        return $this->render('offers.html.twig', [
-            'active' => 'offer',
-            'items_left' => $itemsLeft,
-            'items_middle' => $itemsMiddle,
-            'items_right' => $itemsRight,
-            'items' => $categories,
-            'metaTitle' => 'Oferta',
-            'metaDescription' => ucfirst($metaDescription) . '.',
-            'metaKeywords' => $metaKeywords,
-        ]);
+        return $this->redirectToRoute('index');
     }
 }
