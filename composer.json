@@ -7,6 +7,7 @@
         "ext-iconv": "*",
         "cocur/slugify": "^3.2",
         "facebook/graph-sdk": "^5.7",
+        "nesbot/carbon": "^2.30",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.3.*",

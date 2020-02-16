@@ -5,7 +5,7 @@
 {% block keywords %}{{ metaKeywords|trim }}{{ parent() }}{% endblock %}
 
 {% block body %}
-    {% include('home/slider.html.twig') %}
+    {% include 'home/slider.html.twig' with { 'event': event|raw } %}
     {% include('offers.html.twig') %}
 {% endblock %}
 {% block javascripts %}
